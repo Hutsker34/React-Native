@@ -2,8 +2,32 @@ import React, { useState, useEffect } from 'react';
 import { View, Image, StyleSheet , Button, Alert} from 'react-native';
 import * as Location from 'expo-location';
 
+
 const CatImage = () => {
   const [imageUrl, setImageUrl] = useState(null);
+  const [location, setLocation] = useState(null);
+
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  }, []);
+
+  const fetchLocation = () => {
+    if (location) {
+      Alert.alert('Current Location',`Latitude: ${location.coords.latitude}, Longitude: ${location.coords.longitude}`);
+    } else {
+      Alert.alert('Location not available');
+    }
+  };
 
 
   function changeCat(){
@@ -20,18 +44,7 @@ const CatImage = () => {
     });
   }
 
-  const fetchLocation = async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-
-    if (status !== 'granted') {
-      console.error('Permission to access location was denied');
-      return;
-    }
-
-    let currentLocation = await Location.getCurrentPositionAsync({});
-    
-    Alert.alert(currentLocation.coords)
-  };
+  
 
 
   return (
