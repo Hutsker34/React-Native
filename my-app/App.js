@@ -1,72 +1,60 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, StyleSheet , Button, Alert} from 'react-native';
+import { View, Image, StyleSheet , Button, Alert, Text, ImageBackground} from 'react-native';
 import * as Location from 'expo-location';
+import Slick from 'react-native-slick'
+import firstSlide from './assets/firstSlide.png'
 
 
 const CatImage = () => {
-  const [imageUrl, setImageUrl] = useState(null);
-  const [location, setLocation] = useState(null);
-
-
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-        return;
-      }
-
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-    })();
-  }, []);
-
-  const fetchLocation = () => {
-    if (location) {
-      Alert.alert('Current Location',`Latitude: ${location.coords.latitude}, Longitude: ${location.coords.longitude}`);
-    } else {
-      Alert.alert('Location not available');
-    }
-  };
-
-
-  function changeCat(){
-    fetch('https://api.thecatapi.com/v1/images/search')
-    .then((response) => response.json())
-    .then((data) => {
-      // Устанавливаем URL картинки в состояние компонента
-      if (data && data.length > 0) {
-        setImageUrl(data[0].url);
-      }
-    })
-    .catch((error) => {
-      console.error("Ошибка при запросе картинки:", error);
-    });
-  }
-
-  
 
 
   return (
-    <View style={styles.container}>
-      {imageUrl && <Image source={{ uri: imageUrl }} style={styles.image} />}
-      <Button title='следующий котик!!' onPress={changeCat} />
-      <Button title='geo' onPress={fetchLocation} />
-    </View>
+
+    <Slick style={styles.wrapper} loop={false}>
+        <ImageBackground source={firstSlide} testID="Hello" style={styles.slide1}>
+          <Text style={styles.Title}>Sleep soundly</Text>
+          <Text style={styles.text}>Sleep better with our ambient sound playlist</Text>
+        </ImageBackground>
+        <View testID="Beautiful" style={styles.slide2}>
+          <Text style={styles.text}>Beautiful</Text>
+        </View>
+    </Slick>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+
+
+  slide1: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundSize: 'cover',
+
+
   },
-  image: {
-    width: 300, // или другой размер, который вы хотите
-    height: 200,
-    resizeMode: 'contain',
+  slide2: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#97CAE5'
   },
+  Title: {
+    color: '#fff',
+    fontSize: 30,
+    fontWeight: '600',
+    position: 'relative',
+    top: 50,
+    
+  },
+  text: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '400',
+    position: 'relative',
+    top: 60,
+  }
+  
 });
 
 export default CatImage;
