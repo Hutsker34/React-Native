@@ -4,6 +4,7 @@ import {Image, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import pause from '../assets/pause.png'
 import play from '../assets/play.png'
 const Track = () => {
+
     const [isPlaying, setIsPlaying] = useState(false);
     const [position, setPosition] = useState(0);
   
@@ -12,7 +13,7 @@ const Track = () => {
         const soundObject = new Audio.Sound();
         try {
           // Загружаем аудио
-          await soundObject.loadAsync(require('../audio/test2.mp3'));
+          await soundObject.loadAsync(require('../assets/audio/test2.mp3'));
           await soundObject.setVolumeAsync(0.7);
           if (isPlaying) {
             // Если трек должен играть, устанавливаем позицию и запускаем воспроизведение

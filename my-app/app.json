@@ -12,7 +12,7 @@
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": [
-      "**/*"
+      "assets/music/*"
     ],
     "ios": {
       "supportsTablet": true

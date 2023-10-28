@@ -1,12 +1,36 @@
-import { View,  StyleSheet , TouchableOpacity, Modal,TextInput, Button, Alert, Text,Pressable, ImageBackground} from 'react-native';
+import {Text, View,FlatList,  StyleSheet } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import Track from '../components/Track'
+import * as FileSystem from 'expo-file-system';
+import audioFiles from '../assets/music/music.json';
 
 const HomePage =  () => {
 
+    useEffect(() => {
+        
+        async function listFiles() {
+        info = await FileSystem.getInfoAsync(path);  
+            const folderUri = `${FileSystem.documentDirectory}assets/music/`;
+            try {
+            const result = await FileSystem.readDirectoryAsync(folderUri);
+            console.log(result); // массив имен файлов
+            } catch (error) {
+            console.error('Error reading directory', error);
+            }
+        }
+        listFiles()
+    }, []);
+
+
+  
+
+
     return (
         <View style={styles.HomePageWrap}>
-           <Track/>
+            <FlatList
+                data={audioFiles.files}
+                keyExtractor={(item) => item}
+                renderItem={({ item }) => <Text>{item}</Text>}
+            />
         </View>
     );
 };
