@@ -1,36 +1,36 @@
-import {Text, View,FlatList,  StyleSheet } from 'react-native';
+import {Text, View,FlatList,  StyleSheet,Image } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import * as FileSystem from 'expo-file-system';
-import audioFiles from '../assets/music/music.json';
+
+import Sound from '../components/Sound';
+
+
+
+
+
+const sounds = require.context('../assets/music', true, /\.mp3$/);
+
+const imageSources = sounds.keys().map((key) => sounds(key));
+
+const names = sounds.keys().map((key) => {
+    const start = key.indexOf('/')
+    const end = key.indexOf('.mp3')
+    return key.slice(start + 1, end)
+})
 
 const HomePage =  () => {
 
-    useEffect(() => {
-        
-        async function listFiles() {
-        info = await FileSystem.getInfoAsync(path);  
-            const folderUri = `${FileSystem.documentDirectory}assets/music/`;
-            try {
-            const result = await FileSystem.readDirectoryAsync(folderUri);
-            console.log(result); // массив имен файлов
-            } catch (error) {
-            console.error('Error reading directory', error);
-            }
-        }
-        listFiles()
-    }, []);
-
-
-  
 
 
     return (
         <View style={styles.HomePageWrap}>
             <FlatList
-                data={audioFiles.files}
+               
+
+                data={imageSources}
                 keyExtractor={(item) => item}
-                renderItem={({ item }) => <Text>{item}</Text>}
+                renderItem={({item , index}) => <Sound name={names[index]} path={item}  />}
             />
+            
         </View>
     );
 };
