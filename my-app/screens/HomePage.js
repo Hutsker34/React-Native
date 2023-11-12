@@ -24,8 +24,7 @@ const HomePage =  () => {
     return (
         <View style={styles.HomePageWrap}>
             <FlatList
-               
-
+                
                 data={imageSources}
                 keyExtractor={(item) => item}
                 renderItem={({item , index}) => <Sound name={names[index]} path={item}  />}
@@ -42,7 +41,8 @@ const styles = StyleSheet.create({
             flex: 1,
             alignItems: 'center',
             paddingTop: 40,
-        }
+        },
+        
 
 })
 

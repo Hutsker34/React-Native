@@ -5,50 +5,72 @@ import pause from '../assets/pause.png'
 import play from '../assets/play.png'
 const Sound = (props) => {
 
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [position, setPosition] = useState(0);
-    
+    const [isPause, setisPause] = useState(false);
+    const [sound , setSound] = useState(null)
+    // const [newTrack , setNewTrack] = useState(true)
 
+    // useEffect(() => {
+    //   // setNewTrack(true)
+    // }, [props.path])
 
     useEffect(() => {
-      const loadAndPlayAudio = async () => {
+      
+      const loadAudio = async () => {
         const soundObject = new Audio.Sound();
         try {
           // Загружаем аудио
           
           await soundObject.loadAsync(props.path);
           await soundObject.setVolumeAsync(0.7);
-          if (isPlaying) {
-            // Если трек должен играть, устанавливаем позицию и запускаем воспроизведение
-            await soundObject.setPositionAsync(position);
-            await soundObject.playAsync();
-          }
+          
         } catch (error) {
           console.log("Ошибка при загрузке или воспроизведении аудио:", error);
         }
         return soundObject;
       };
-      
-      let soundObject = null; // объявляем переменную для хранения объекта Audio
-  
-      if (isPlaying) { // если трек должен играть
-        loadAndPlayAudio().then((result) => {
-          soundObject = result; // сохраняем объект Audio в переменной
-        });
-      } else if (soundObject) { // если трек должен быть на паузе и объект Audio уже был создан
-        setPosition(soundObject._lastKnownPosition); // сохраняем текущую позицию трека в переменную
-        soundObject.pauseAsync(); // ставим трек на паузу
+      if (!sound) {
+        loadAudio().then(setSound);
       }
-  
-      return () => { // функция очистки для useEffect
-        if (soundObject) {
-          soundObject.unloadAsync(); // выгружаем аудио из памяти при завершении компонента
+
+      return sound ? () => {
+        sound.unloadAsync();
+      } : undefined;
+    }, [props.path]);
+
+
+    
+
+
+    useEffect(() => {
+      
+      const pauseAudio = async () => {
+        
+        console.log('pause')
+        if (sound) {
+          await sound.pauseAsync();
+          console.log('Воспроизведение на паузе');
+        }
+        };
+
+      const resumeAudio = async () => {
+        
+        if (sound) {
+          await sound.playAsync();
+          console.log('Воспроизведение возобновлено');
         }
       };
-    }, [isPlaying]);
-  
+      if (isPause) { // если трек должен играть
+       resumeAudio()
+      }else{
+        pauseAudio()
+      }
+      // setNewTrack(false) 
+    }, [isPause]);
+
+
     const handlePlayPause = () => {
-      setIsPlaying(!isPlaying);
+      
+      setisPause(!isPause);
       
     };
   
@@ -57,13 +79,13 @@ const Sound = (props) => {
     <View style={styles.track__wrap}>
       <Text style={styles.track__wrapName}>{props.name}</Text>
       <TouchableOpacity onPress={handlePlayPause} style={styles.pauseBtn}>
-        {isPlaying &&
+        {isPause &&
             <Image
                 style={styles.pauseBtn__Img}
                 source={pause}
             />
         }
-        {isPlaying == false &&
+        {isPause == false &&
             <Image
                 style={styles.pauseBtn__Img}
                 source={play}
@@ -92,15 +114,15 @@ const styles = StyleSheet.create({
     track__wrap: {
         flex: 1,
         flexDirection: 'row',
-        maxHeight: 50,
+        maxHeight: 45,
         justifyContent: 'space-between',
         alignItems: 'center',
-        width: '80%',
+        width: '75%',
         paddingHorizontal: 20,
         paddingVertical: 10,
-        height: 30,
         backgroundColor: '#07AB80',
-        marginTop: 30,
+        marginTop: 40,
+        marginLeft: 10,
         paddingVertical: 5,
         borderRadius: 20,
   },
