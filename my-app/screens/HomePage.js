@@ -27,7 +27,7 @@ const HomePage =  () => {
                 
                 data={imageSources}
                 keyExtractor={(item) => item}
-                renderItem={({item , index}) => <Sound name={names[index]} path={item}  />}
+                renderItem={({item , index}) => <Sound pastId={index} name={names[index]} path={item}  />}
             />
             
         </View>

@@ -7,6 +7,7 @@ const Sound = (props) => {
 
     const [isPause, setisPause] = useState(false);
     const [sound , setSound] = useState(null)
+    const [pastSoundID , setPastSoundID] = useState(null)
     // const [newTrack , setNewTrack] = useState(true)
 
     // useEffect(() => {
@@ -17,21 +18,24 @@ const Sound = (props) => {
       
       const loadAudio = async () => {
         const soundObject = new Audio.Sound();
+        
         try {
           // Загружаем аудио
           
           await soundObject.loadAsync(props.path);
           await soundObject.setVolumeAsync(0.7);
           
+          
         } catch (error) {
           console.log("Ошибка при загрузке или воспроизведении аудио:", error);
         }
+        
         return soundObject;
       };
       if (!sound) {
         loadAudio().then(setSound);
       }
-
+      
       return sound ? () => {
         sound.unloadAsync();
       } : undefined;
@@ -45,10 +49,8 @@ const Sound = (props) => {
       
       const pauseAudio = async () => {
         
-        console.log('pause')
         if (sound) {
           await sound.pauseAsync();
-          console.log('Воспроизведение на паузе');
         }
         };
 
@@ -56,7 +58,6 @@ const Sound = (props) => {
         
         if (sound) {
           await sound.playAsync();
-          console.log('Воспроизведение возобновлено');
         }
       };
       if (isPause) { // если трек должен играть
@@ -65,12 +66,23 @@ const Sound = (props) => {
         pauseAudio()
       }
       // setNewTrack(false) 
+      
     }, [isPause]);
 
-
+    
     const handlePlayPause = () => {
+      if(pastSoundID == sound._key){
+        setisPause(!isPause);
+      }else{
+        console.log('СТАВИТ НА ПАУЗУ ПРОШЛЫЙ ТРЕК')
+
+      }
+      console.log(props.path)
+      console.log('NOW',sound._key)
+      console.log('PAST',props.pastId)
+      setPastSoundID(props.pastId)
       
-      setisPause(!isPause);
+      
       
     };
   
