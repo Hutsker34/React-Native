@@ -4,34 +4,32 @@ import {Image, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import pause from '../assets/pause.png'
 import play from '../assets/play.png'
 const Sound = (props) => {
-
+    
     const [isPause, setisPause] = useState(false);
     const [sound , setSound] = useState(null)
-    const [pastSoundID , setPastSoundID] = useState(null)
+    
     // const [newTrack , setNewTrack] = useState(true)
 
-    // useEffect(() => {
-    //   // setNewTrack(true)
-    // }, [props.path])
+    const loadAudio = async () => {
+      const soundObject = new Audio.Sound();
+      
+      try {
+        // Загружаем аудио
+        
+        await soundObject.loadAsync(props.path);
+        await soundObject.setVolumeAsync(0.7);
+        
+        
+      } catch (error) {
+        console.log("Ошибка при загрузке или воспроизведении аудио:", error);
+      }
+      
+      return soundObject;
+    };
 
     useEffect(() => {
       
-      const loadAudio = async () => {
-        const soundObject = new Audio.Sound();
-        
-        try {
-          // Загружаем аудио
-          
-          await soundObject.loadAsync(props.path);
-          await soundObject.setVolumeAsync(0.7);
-          
-          
-        } catch (error) {
-          console.log("Ошибка при загрузке или воспроизведении аудио:", error);
-        }
-        
-        return soundObject;
-      };
+     
       if (!sound) {
         loadAudio().then(setSound);
       }
@@ -48,48 +46,52 @@ const Sound = (props) => {
     useEffect(() => {
       
       const pauseAudio = async () => {
-        
-        if (sound) {
-          await sound.pauseAsync();
-        }
+        await sound.pauseAsync();
         };
 
       const resumeAudio = async () => {
-        
-        if (sound) {
+        if(props.hasChanged){
+          await sound.replayAsync()
+        }else{
           await sound.playAsync();
         }
+        
       };
+
+
+      console.log('isPause', isPause, props.index)
+
+
+      if(!sound){
+        return
+      }
       if (isPause) { // если трек должен играть
+        console.log('resumeAudio')
+        console.log('hasChanged',props.hasChanged)
+
        resumeAudio()
       }else{
+        console.log('pauseAudio')
         pauseAudio()
       }
       // setNewTrack(false) 
       
     }, [isPause]);
 
+  //   useEffect(() => {
+  //     loadAudio().then(setSound);
+      
+  // }, [props.hasChanged])
     
     const handlePlayPause = () => {
-      if(pastSoundID == sound._key){
-        setisPause(!isPause);
-      }else{
-        console.log('СТАВИТ НА ПАУЗУ ПРОШЛЫЙ ТРЕК')
-
-      }
-      console.log(props.path)
-      console.log('NOW',sound._key)
-      console.log('PAST',props.pastId)
-      setPastSoundID(props.pastId)
-      
-      
-      
+      setisPause(!isPause);
+      props.setCurrentSoundIndex(props.index)
     };
   
 
   return (
     <View style={styles.track__wrap}>
-      <Text style={styles.track__wrapName}>{props.name}</Text>
+      <Text  style={[props.isActive ? styles.activeClass : styles.track__wrap]}>{props.name}</Text>
       <TouchableOpacity onPress={handlePlayPause} style={styles.pauseBtn}>
         {isPause &&
             <Image
@@ -109,6 +111,9 @@ const Sound = (props) => {
 };
 
 const styles = StyleSheet.create({
+    activeClass: {
+        color: 'red',
+    },
     track__wrapName : {
         color: 'white',
         fontSize: 16

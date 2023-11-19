@@ -6,7 +6,6 @@ import Sound from '../components/Sound';
 
 
 
-
 const sounds = require.context('../assets/music', true, /\.mp3$/);
 
 const imageSources = sounds.keys().map((key) => sounds(key));
@@ -19,6 +18,14 @@ const names = sounds.keys().map((key) => {
 
 const HomePage =  () => {
 
+    const [hasChanged, setHasChanged] = useState(false)
+    const [currentSoundIndex , setCurrentSoundIndex] = useState(null)
+
+    function changeCurrentSound(index){
+        setHasChanged(currentSoundIndex !== index)
+        setCurrentSoundIndex(index)
+    }
+
 
 
     return (
@@ -27,7 +34,7 @@ const HomePage =  () => {
                 
                 data={imageSources}
                 keyExtractor={(item) => item}
-                renderItem={({item , index}) => <Sound pastId={index} name={names[index]} path={item}  />}
+                renderItem={({item , index}) => <Sound hasChanged={hasChanged} isActive={index === currentSoundIndex} setCurrentSoundIndex={changeCurrentSound} currentSoundIndex={currentSoundIndex} name={names[index]} path={item} index={index}  />}
             />
             
         </View>
