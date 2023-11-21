@@ -58,30 +58,33 @@ const Sound = (props) => {
         
       };
 
-
-      console.log('isPause', isPause, props.index)
+     
 
 
       if(!sound){
         return
       }
-      if (isPause) { // если трек должен играть
-        console.log('resumeAudio')
-        console.log('hasChanged',props.hasChanged)
-
-       resumeAudio()
+      console.log(props.hasChanged  , props.index, props.lastSOundIndex)
+      if(props.index == props.lastSOundIndex){
+        if (isPause ) { // если трек должен играть
+          resumeAudio()
+        }else{
+          pauseAudio()
+        }
       }else{
-        console.log('pauseAudio')
         pauseAudio()
       }
-      // setNewTrack(false) 
+       
+      
+      
+      
+      
+      
+     
       
     }, [isPause]);
 
-  //   useEffect(() => {
-  //     loadAudio().then(setSound);
-      
-  // }, [props.hasChanged])
+   
     
     const handlePlayPause = () => {
       setisPause(!isPause);
@@ -91,7 +94,7 @@ const Sound = (props) => {
 
   return (
     <View style={styles.track__wrap}>
-      <Text  style={[props.isActive ? styles.activeClass : styles.track__wrap]}>{props.name}</Text>
+      <Text  style={styles.track__wrapName}>{props.name}</Text>
       <TouchableOpacity onPress={handlePlayPause} style={styles.pauseBtn}>
         {isPause &&
             <Image
@@ -111,9 +114,7 @@ const Sound = (props) => {
 };
 
 const styles = StyleSheet.create({
-    activeClass: {
-        color: 'red',
-    },
+    
     track__wrapName : {
         color: 'white',
         fontSize: 16

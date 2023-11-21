@@ -20,12 +20,15 @@ const HomePage =  () => {
 
     const [hasChanged, setHasChanged] = useState(false)
     const [currentSoundIndex , setCurrentSoundIndex] = useState(null)
+    const [lastSOundIndex , setLastSoundIndex] = useState(null)
 
     function changeCurrentSound(index){
         setHasChanged(currentSoundIndex !== index)
+        setLastSoundIndex(currentSoundIndex)
         setCurrentSoundIndex(index)
+        
     }
-
+    
 
 
     return (
@@ -34,7 +37,7 @@ const HomePage =  () => {
                 
                 data={imageSources}
                 keyExtractor={(item) => item}
-                renderItem={({item , index}) => <Sound hasChanged={hasChanged} isActive={index === currentSoundIndex} setCurrentSoundIndex={changeCurrentSound} currentSoundIndex={currentSoundIndex} name={names[index]} path={item} index={index}  />}
+                renderItem={({item , index}) => <Sound lastSOundIndex={lastSOundIndex} hasChanged={hasChanged} isActive={index === currentSoundIndex} setCurrentSoundIndex={changeCurrentSound} currentSoundIndex={currentSoundIndex} name={names[index]} path={item} index={index}  />}
             />
             
         </View>
