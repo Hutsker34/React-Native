@@ -7,8 +7,8 @@ const Sound = (props) => {
     
     const [isPause, setisPause] = useState(false);
     const [sound , setSound] = useState(null)
+ 
     
-    // const [newTrack , setNewTrack] = useState(true)
 
     const loadAudio = async () => {
       const soundObject = new Audio.Sound();
@@ -23,25 +23,30 @@ const Sound = (props) => {
       } catch (error) {
         console.log("Ошибка при загрузке или воспроизведении аудио:", error);
       }
-      
+
       return soundObject;
     };
+
+    
 
     useEffect(() => {
       
      
       if (!sound) {
         loadAudio().then(setSound);
+        
+        
       }
       
       return sound ? () => {
+        
         sound.unloadAsync();
       } : undefined;
     }, [props.path]);
 
-
     
-
+    
+    
 
     useEffect(() => {
       
@@ -51,36 +56,28 @@ const Sound = (props) => {
 
       const resumeAudio = async () => {
         if(props.hasChanged){
+          props.pauseLastTrack(sound)
+          
           await sound.replayAsync()
+          
         }else{
           await sound.playAsync();
         }
         
+       
       };
-
-     
 
 
       if(!sound){
         return
       }
-      console.log(props.hasChanged  , props.index, props.lastSOundIndex)
-      if(props.index == props.lastSOundIndex){
-        if (isPause ) { // если трек должен играть
-          resumeAudio()
-        }else{
-          pauseAudio()
-        }
+      
+      if (isPause) { // если трек должен играть
+        resumeAudio()
       }else{
         pauseAudio()
       }
-       
-      
-      
-      
-      
-      
-     
+
       
     }, [isPause]);
 
@@ -89,6 +86,7 @@ const Sound = (props) => {
     const handlePlayPause = () => {
       setisPause(!isPause);
       props.setCurrentSoundIndex(props.index)
+      
     };
   
 

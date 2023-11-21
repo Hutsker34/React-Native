@@ -1,6 +1,8 @@
 import {Text, View,FlatList,  StyleSheet,Image } from 'react-native';
 import React, { useState, useEffect } from 'react';
 
+import { Audio } from 'expo-av';
+
 import Sound from '../components/Sound';
 
 
@@ -20,14 +22,21 @@ const HomePage =  () => {
 
     const [hasChanged, setHasChanged] = useState(false)
     const [currentSoundIndex , setCurrentSoundIndex] = useState(null)
-    const [lastSOundIndex , setLastSoundIndex] = useState(null)
+    const [ lastSound, setLastSound] = useState(null)
 
     function changeCurrentSound(index){
         setHasChanged(currentSoundIndex !== index)
-        setLastSoundIndex(currentSoundIndex)
         setCurrentSoundIndex(index)
         
     }
+    function pauseLastTrack(sound){
+        if(lastSound !== sound && lastSound !== null){
+            lastSound.pauseAsync()
+            
+        }
+        setLastSound(sound)
+    }
+        
     
 
 
@@ -37,7 +46,7 @@ const HomePage =  () => {
                 
                 data={imageSources}
                 keyExtractor={(item) => item}
-                renderItem={({item , index}) => <Sound lastSOundIndex={lastSOundIndex} hasChanged={hasChanged} isActive={index === currentSoundIndex} setCurrentSoundIndex={changeCurrentSound} currentSoundIndex={currentSoundIndex} name={names[index]} path={item} index={index}  />}
+                renderItem={({item , index}) => <Sound  pauseLastTrack={pauseLastTrack}  hasChanged={hasChanged} setCurrentSoundIndex={changeCurrentSound} currentSoundIndex={currentSoundIndex} name={names[index]} path={item} index={index}  />}
             />
             
         </View>
