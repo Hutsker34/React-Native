@@ -47,6 +47,9 @@ const Sound = (props) => {
     
     
     
+    useEffect(() => {
+      setisPause(props.isActive)
+    }, [props.isActive])
 
     useEffect(() => {
       
@@ -67,6 +70,7 @@ const Sound = (props) => {
        
       };
 
+      
 
       if(!sound){
         return
@@ -85,6 +89,7 @@ const Sound = (props) => {
     
     const handlePlayPause = () => {
       setisPause(!isPause);
+      
       props.setCurrentSoundIndex(props.index)
       
     };
@@ -100,7 +105,7 @@ const Sound = (props) => {
                 source={pause}
             />
         }
-        {isPause == false &&
+        {!isPause &&
             <Image
                 style={styles.pauseBtn__Img}
                 source={play}

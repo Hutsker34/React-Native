@@ -46,7 +46,7 @@ const HomePage =  () => {
                 
                 data={imageSources}
                 keyExtractor={(item) => item}
-                renderItem={({item , index}) => <Sound  pauseLastTrack={pauseLastTrack}  hasChanged={hasChanged} setCurrentSoundIndex={changeCurrentSound} currentSoundIndex={currentSoundIndex} name={names[index]} path={item} index={index}  />}
+                renderItem={({item , index}) => <Sound  pauseLastTrack={pauseLastTrack}  hasChanged={hasChanged} isActive={currentSoundIndex == index} setCurrentSoundIndex={changeCurrentSound} currentSoundIndex={currentSoundIndex} name={names[index]} path={item} index={index}  />}
             />
             
         </View>
