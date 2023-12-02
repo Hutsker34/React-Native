@@ -38,8 +38,6 @@ const HomePage =  () => {
     }
         
     
-
-
     return (
         <View style={styles.HomePageWrap}>
             <FlatList
