@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect , useRef} from 'react';
 import { Audio } from 'expo-av';
 import { Image, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import pauseIcon from '../assets/pause.png';
 import playIcon from '../assets/play.png';
 
 const Sound = ({ path, isActive, hasChanged, pauseLastTrack, setCurrentSoundIndex, index, name }) => {
+    const ref = useRef(null);
+
+
     const [isPaused, setIsPaused] = useState(false);
     const [sound, setSound] = useState(null);
     const [playbackStatus, setPlaybackStatus] = useState();
+   
 
     const onPlaybackStatusUpdate = (status) => {
       setPlaybackStatus(status);
@@ -26,6 +30,15 @@ const Sound = ({ path, isActive, hasChanged, pauseLastTrack, setCurrentSoundInde
       }
       return '0%';
     };
+
+    function setPlayPosition(event){
+      console.log(playbackStatus.durationMillis)
+      console.log(event.nativeEvent.locationX)
+      console.log(ref.current)
+      const  res = event.nativeEvent.locationX * 100
+      const sec = res / width 
+      
+    }
 
     
 
@@ -58,6 +71,14 @@ const Sound = ({ path, isActive, hasChanged, pauseLastTrack, setCurrentSoundInde
     }, [isActive]);
 
     useEffect(() => {
+      console.log(sound)
+      if(!sound){
+        return
+      }
+      sound.playFromPositionAsync(40_000)
+    },[sound])
+
+    useEffect(() => {
         const togglePlayback = async (play) => {
             if(!sound){
               return
@@ -87,12 +108,23 @@ const Sound = ({ path, isActive, hasChanged, pauseLastTrack, setCurrentSoundInde
     };
 
     return (
-      <View style={styles.trackContainer}>
-      {/* <Text style={styles.track__wrapName}>{name}</Text> */}
-      <View style={styles.progressBarContainer}>
-        <View style={[styles.progressBar, { width: getProgress() }]} />
-      </View>
-      
+    <View style={styles.track__wrap}>
+      <Text  style={styles.track__wrapName}>{name}</Text>
+      {isActive &&
+        <View onLayout={(event) => {
+          const {x, y, width, height} = event.nativeEvent.layout;
+          console.log({x, y, width, height})
+        }}
+        ref={ref} onTouchStart={(event) => setPlayPosition(event)} style={styles.progressBarContainer}>
+            <View style={[styles.progressBar, { width: getProgress() }]} />
+        </View>
+      }
+      <TouchableOpacity onPress={handlePlayPause} style={styles.pauseBtn}>
+          <Image
+              style={styles.pauseBtn__Img}
+              source={isPaused ? pauseIcon : playIcon}
+          />
+      </TouchableOpacity>
     </View>
     );
 };
@@ -109,16 +141,38 @@ const styles = StyleSheet.create({
   trackName: {
     // Your track name styles
   },
+  track__wrap: {
+    flex: 1,
+    flexDirection: 'row',
+    maxHeight: 45,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '74%',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: '#07AB80',
+    marginTop: 40,
+    marginLeft: 10,
+    
+    paddingVertical: 5,
+    borderRadius: 20,
+
+
+  },
+  pauseBtn__Img: {
+    maxWidth: 16,
+    maxHeight: 16
+  },
   progressBarContainer: {
     flex: 1,
     height: 5,
     flexDirection: 'row',
-    backgroundColor: 'lightgray',
+    backgroundColor: '#D9D9D9',
     marginHorizontal: 10, // Adjust as needed for spacing
     borderRadius: 2.5,
   },
   progressBar: {
-    backgroundColor: 'blue',
+    backgroundColor: '#007A5B',
     width: 50,
     height: '100%',
     borderRadius: 2.5,
