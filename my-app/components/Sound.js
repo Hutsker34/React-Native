@@ -11,16 +11,17 @@ const Sound = ({ path, isActive, hasChanged, pauseLastTrack, setCurrentSoundInde
     const [isPaused, setIsPaused] = useState(false);
     const [sound, setSound] = useState(null);
     const [playbackStatus, setPlaybackStatus] = useState();
-   
+    const [trackWidth, setTarckwidth] = useState(0)
+    const [trackMillis, setTrackMillis] = useState(0)
 
     const onPlaybackStatusUpdate = (status) => {
       setPlaybackStatus(status);
+      
+      setTrackMillis(status.positionMillis)
     };
-    useEffect(() => {
-      if (sound) {
-        sound.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
-      }
-    }, [sound]);
+
+
+    
     
     const getProgress = () => {
       if (playbackStatus) {
@@ -32,15 +33,34 @@ const Sound = ({ path, isActive, hasChanged, pauseLastTrack, setCurrentSoundInde
     };
 
     function setPlayPosition(event){
-      console.log(playbackStatus.durationMillis)
-      console.log(event.nativeEvent.locationX)
-      console.log(ref.current)
-      const  res = event.nativeEvent.locationX * 100
-      const sec = res / width 
+      
+      let position = (playbackStatus.durationMillis * event.nativeEvent.locationX) / trackWidth
+      
+      sound.playFromPositionAsync(position)
+      setTrackMillis(position)
       
     }
 
     
+    useEffect(() => {
+      if(playbackStatus && playbackStatus.didJustFinish){
+        sound.stopAsync()
+        setIsPaused(false)
+      }
+    }, [playbackStatus])
+
+
+
+    useEffect(() => {
+      if (!sound) {
+        return
+        
+      }
+      sound.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
+
+    }, [sound]);
+
+
 
     useEffect(() => {
         let isCancelled = false;
@@ -70,13 +90,6 @@ const Sound = ({ path, isActive, hasChanged, pauseLastTrack, setCurrentSoundInde
         setIsPaused(isActive);
     }, [isActive]);
 
-    useEffect(() => {
-      console.log(sound)
-      if(!sound){
-        return
-      }
-      sound.playFromPositionAsync(40_000)
-    },[sound])
 
     useEffect(() => {
         const togglePlayback = async (play) => {
@@ -90,9 +103,10 @@ const Sound = ({ path, isActive, hasChanged, pauseLastTrack, setCurrentSoundInde
             
             if (hasChanged) {
                 pauseLastTrack(sound);
+                
                 await sound.replayAsync();
             } else {
-                await sound.playAsync();
+                await sound.playFromPositionAsync(trackMillis);
             }
             
         };
@@ -112,11 +126,12 @@ const Sound = ({ path, isActive, hasChanged, pauseLastTrack, setCurrentSoundInde
       <Text  style={styles.track__wrapName}>{name}</Text>
       {isActive &&
         <View onLayout={(event) => {
-          const {x, y, width, height} = event.nativeEvent.layout;
-          console.log({x, y, width, height})
-        }}
-        ref={ref} onTouchStart={(event) => setPlayPosition(event)} style={styles.progressBarContainer}>
-            <View style={[styles.progressBar, { width: getProgress() }]} />
+          const {width} = event.nativeEvent.layout;
+          setTarckwidth({width}.width)
+          
+          }}
+          ref={ref} onTouchStart={(event) => setPlayPosition(event)} style={styles.progressBarContainer}>
+        <View style={[styles.progressBar, { width: getProgress() }]} />
         </View>
       }
       <TouchableOpacity onPress={handlePlayPause} style={styles.pauseBtn}>
