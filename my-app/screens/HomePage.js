@@ -21,8 +21,44 @@ const names = sounds.keys().map((key) => {
 const HomePage =  () => {
 
     const [hasChanged, setHasChanged] = useState(false)
-    const [currentSoundIndex , setCurrentSoundIndex] = useState(null)
+    const [currentSoundIndex , setCurrentSoundIndex] = useState(2)
     const [ lastSound, setLastSound] = useState(null)
+    const [currentQueueSound, setCurrentQueueSound] = useState(null)
+   
+
+    async function playSoundsSequentially(sounds) {
+        for (const soundFile of sounds) {
+          const { sound } = await Audio.Sound.createAsync(soundFile);
+
+          setCurrentQueueSound(sound)
+          await sound.playAsync();
+          await new Promise(resolve => {
+            sound.setOnPlaybackStatusUpdate(playbackStatus => {
+              if (playbackStatus.didJustFinish) {
+                resolve();
+              }
+            });
+          });
+    
+          await sound.unloadAsync();
+        }
+      }
+
+
+    const soundFiles = sounds.keys().map(sounds);
+    const currentSoundsQueue = soundFiles.slice(currentSoundIndex)
+    
+
+    useEffect( () => {
+        async function unloadSound(){
+            if(currentQueueSound){
+                await currentQueueSound.unloadAsync();
+            }
+        }
+        unloadSound();
+        playSoundsSequentially(currentSoundsQueue)
+
+    }, [currentSoundIndex])
 
     function changeCurrentSound(index){
         setHasChanged(currentSoundIndex !== index)

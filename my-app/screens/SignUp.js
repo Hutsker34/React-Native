@@ -16,6 +16,8 @@ const CatImage = (props) => {
     setModalVisible(!modalVisible)
   };
 
+ 
+
   return (
 
     <Slick style={styles.wrapper} loop={false}>
