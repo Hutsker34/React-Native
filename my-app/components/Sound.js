@@ -4,7 +4,7 @@ import { Image, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import pauseIcon from '../assets/pause.png';
 import playIcon from '../assets/play.png';
 
-const Sound = ({ path, isActive, hasChanged, pauseLastTrack, setCurrentSoundIndex, index, name }) => {
+const Sound = ({currentQueueSound, path, isActive, hasChanged, pauseLastTrack, setCurrentSoundIndex, index, name }) => {
     const ref = useRef(null);
 
 
@@ -62,29 +62,34 @@ const Sound = ({ path, isActive, hasChanged, pauseLastTrack, setCurrentSoundInde
 
 
 
-    // useEffect(() => {
-    //     let isCancelled = false;
+    useEffect(() => {
+        let isCancelled = false;
 
-    //     const loadAudio = async () => {
-    //         const soundObject = new Audio.Sound();
-    //         try {
-    //             await soundObject.loadAsync(path);
-    //             await soundObject.setVolumeAsync(0.7);
-    //             if (!isCancelled) {
-    //                 setSound(soundObject);
-    //             }
-    //         } catch (error) {
-    //             console.error("Error loading or playing audio:", error);
-    //         }
-    //     };
+        const loadAudio = async () => {
+            const soundObject = currentQueueSound
+            if(currentQueueSound == null){
+              return 
+            }
+            else{ 
+                try {
+                  await soundObject.setVolumeAsync(0.7);
+                  if (!isCancelled) {
+                      setSound(soundObject);
+                  }
+              } catch (error) {
+                  console.error("Error loading or playing audio:", error);
+              }
+            }
+            
+        };
 
-    //     loadAudio();
+        loadAudio();
 
-    //     return () => {
-    //         isCancelled = true;
-    //         sound?.unloadAsync();
-    //     };
-    // }, [path]);
+        return () => {
+            isCancelled = true;
+            sound?.unloadAsync();
+        };
+    }, [currentQueueSound]);
 
     useEffect(() => {
         setIsPaused(isActive);

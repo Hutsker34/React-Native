@@ -21,7 +21,7 @@ const names = sounds.keys().map((key) => {
 const HomePage =  () => {
 
     const [hasChanged, setHasChanged] = useState(false)
-    const [currentSoundIndex , setCurrentSoundIndex] = useState(2)
+    const [currentSoundIndex , setCurrentSoundIndex] = useState(1)
     const [ lastSound, setLastSound] = useState(null)
     const [currentQueueSound, setCurrentQueueSound] = useState(null)
    
@@ -80,7 +80,7 @@ const HomePage =  () => {
                 
                 data={imageSources}
                 keyExtractor={(item) => item}
-                renderItem={({item , index}) => <Sound  pauseLastTrack={pauseLastTrack}  hasChanged={hasChanged} isActive={currentSoundIndex == index} setCurrentSoundIndex={changeCurrentSound} currentSoundIndex={currentSoundIndex} name={names[index]} path={item} index={index}  />}
+                renderItem={({item , index}) => <Sound currentQueueSound={currentQueueSound} pauseLastTrack={pauseLastTrack}  hasChanged={hasChanged} isActive={currentSoundIndex == index} setCurrentSoundIndex={changeCurrentSound} currentSoundIndex={currentSoundIndex} name={names[index]} path={item} index={index}  />}
             />
             
         </View>
