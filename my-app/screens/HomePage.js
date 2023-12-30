@@ -21,7 +21,7 @@ const names = sounds.keys().map((key) => {
 const HomePage =  () => {
 
     const [hasChanged, setHasChanged] = useState(false)
-    const [currentSoundIndex , setCurrentSoundIndex] = useState(1)
+    const [currentSoundIndex , setCurrentSoundIndex] = useState(2)
     const [ lastSound, setLastSound] = useState(null)
     const [currentQueueSound, setCurrentQueueSound] = useState(null)
    
@@ -72,7 +72,15 @@ const HomePage =  () => {
         }
         setLastSound(sound)
     }
-        
+
+    function playNext(){
+        if(currentSoundIndex < soundFiles.length -1){
+            setCurrentSoundIndex(currentSoundIndex +1)
+            
+        }
+        console.log('playNext')
+    }
+   
     
     return (
         <View style={styles.HomePageWrap}>
@@ -80,7 +88,7 @@ const HomePage =  () => {
                 
                 data={imageSources}
                 keyExtractor={(item) => item}
-                renderItem={({item , index}) => <Sound currentQueueSound={currentQueueSound} pauseLastTrack={pauseLastTrack}  hasChanged={hasChanged} isActive={currentSoundIndex == index} setCurrentSoundIndex={changeCurrentSound} currentSoundIndex={currentSoundIndex} name={names[index]} path={item} index={index}  />}
+                renderItem={({item , index}) => <Sound playNext={playNext}  currentSound={currentQueueSound} pauseLastTrack={pauseLastTrack}  hasChanged={hasChanged} isActive={currentSoundIndex == index} setCurrentSoundIndex={changeCurrentSound} currentSoundIndex={currentSoundIndex} name={names[index]} path={item} index={index}  />}
             />
             
         </View>

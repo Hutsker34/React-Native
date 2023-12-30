@@ -4,7 +4,7 @@ import { Image, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import pauseIcon from '../assets/pause.png';
 import playIcon from '../assets/play.png';
 
-const Sound = ({currentQueueSound, path, isActive, hasChanged, pauseLastTrack, setCurrentSoundIndex, index, name }) => {
+const Sound = ({playNext, currentSound, path, isActive, hasChanged, pauseLastTrack, setCurrentSoundIndex, index, name }) => {
     const ref = useRef(null);
 
 
@@ -34,7 +34,7 @@ const Sound = ({currentQueueSound, path, isActive, hasChanged, pauseLastTrack, s
 
     function setPlayPosition(event){
       
-      let position = (playbackStatus.durationMillis * event.nativeEvent.locationX) / trackWidth
+      let position = playbackStatus ? (playbackStatus.durationMillis * event.nativeEvent.locationX) / trackWidth : 0
       
       sound.playFromPositionAsync(position)
       setTrackMillis(position)
@@ -43,8 +43,10 @@ const Sound = ({currentQueueSound, path, isActive, hasChanged, pauseLastTrack, s
 
     
     useEffect(() => {
+      console.log('playbackStatus')
       if(playbackStatus && playbackStatus.didJustFinish){
-        sound.stopAsync()
+        playNext()
+        // sound.stopAsync()
         setIsPaused(false)
       }
     }, [playbackStatus])
@@ -52,72 +54,82 @@ const Sound = ({currentQueueSound, path, isActive, hasChanged, pauseLastTrack, s
 
 
     useEffect(() => {
+      console.log('sound')
       if (!sound) {
         return
         
       }
       sound.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
+      
 
     }, [sound]);
 
 
 
     useEffect(() => {
+      console.log('currentSound')
         let isCancelled = false;
-
-        const loadAudio = async () => {
-            const soundObject = currentQueueSound
-            if(currentQueueSound == null){
-              return 
+        const updeteAudio = async () => {
+          if(currentSound){
+            const status = await currentSound.getStatusAsync()
+            if(status.isLoaded){
+              setSound(currentSound)
             }
-            else{ 
-                try {
-                  await soundObject.setVolumeAsync(0.7);
-                  if (!isCancelled) {
-                      setSound(soundObject);
-                  }
-              } catch (error) {
-                  console.error("Error loading or playing audio:", error);
-              }
-            }
-            
-        };
+          }
+        }
+        updeteAudio()
+       
+        // const loadAudio = async () => {
+        //     const soundObject = new Audio.Sound();
+        //     try {
+        //         await soundObject.loadAsync(path);
+        //         await soundObject.setVolumeAsync(0.7);
+        //         if (!isCancelled) {
+        //             setSound(soundObject);
+        //         }
+        //     } catch (error) {
+        //         console.error("Error loading or playing audio:", error);
+        //     }
+        // };
 
-        loadAudio();
+        // loadAudio();
 
         return () => {
             isCancelled = true;
             sound?.unloadAsync();
         };
-    }, [currentQueueSound]);
+        
+    }, [currentSound]);
 
     useEffect(() => {
+        console.log('isActive')
         setIsPaused(isActive);
     }, [isActive]);
 
 
-    useEffect(() => {
-        const togglePlayback = async (play) => {
-            if(!sound){
-              return
-            }
+    // useEffect(() => {
+    //     const togglePlayback = async (play) => {
+    //         if(!sound){
+    //           return
+    //         }
 
-            if(!play){
-              return await sound.pauseAsync();
-            }
+    //         if(!play){
+    //           return await sound.pauseAsync();
+    //         }
             
-            if (hasChanged) {
-                pauseLastTrack(sound);
+    //         if (hasChanged) {
+    //             pauseLastTrack(sound);
                 
-                await sound.replayAsync();
-            } else {
-                await sound.playFromPositionAsync(trackMillis);
-            }
+    //             await sound.replayAsync();
+    //         } else {
+    //             await sound.playFromPositionAsync(trackMillis);
+    //         }
             
-        };
+    //     };
 
-        togglePlayback(isPaused);
-    }, [isPaused, hasChanged, sound, pauseLastTrack]);
+    //     togglePlayback(isPaused);
+    //     console.log('isPaused, hasChanged, sound, pauseLastTrack')
+    // }, [isPaused, hasChanged, sound, pauseLastTrack]);
 
     
 
