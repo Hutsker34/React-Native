@@ -43,7 +43,7 @@ const Sound = ({playNext, currentSound, path, isActive, hasChanged, pauseLastTra
 
     
     useEffect(() => {
-      console.log('playbackStatus')
+      
       if(playbackStatus && playbackStatus.didJustFinish){
         playNext()
         // sound.stopAsync()
@@ -54,7 +54,7 @@ const Sound = ({playNext, currentSound, path, isActive, hasChanged, pauseLastTra
 
 
     useEffect(() => {
-      console.log('sound')
+     
       if (!sound) {
         return
         
@@ -67,7 +67,7 @@ const Sound = ({playNext, currentSound, path, isActive, hasChanged, pauseLastTra
 
 
     useEffect(() => {
-      console.log('currentSound')
+      
         let isCancelled = false;
         const updeteAudio = async () => {
           if(currentSound){
@@ -102,7 +102,7 @@ const Sound = ({playNext, currentSound, path, isActive, hasChanged, pauseLastTra
     }, [currentSound]);
 
     useEffect(() => {
-        console.log('isActive')
+        
         setIsPaused(isActive);
     }, [isActive]);
 
@@ -134,6 +134,7 @@ const Sound = ({playNext, currentSound, path, isActive, hasChanged, pauseLastTra
     
 
     const handlePlayPause = () => {
+        console.log('123')
         setIsPaused(!isPaused);
         setCurrentSoundIndex(index);
     };
