@@ -4,11 +4,11 @@ import { Image, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import pauseIcon from '../assets/pause.png';
 import playIcon from '../assets/play.png';
 
-const Sound = ({playNext, currentSound, path, isActive, hasChanged, pauseLastTrack, setCurrentSoundIndex, index, name }) => {
+const Sound = ({playNext, currentSound, isActive, setCurrentSoundIndex, index, name }) => {
     const ref = useRef(null);
 
 
-    const [isPaused, setIsPaused] = useState(false);
+    
     const [sound, setSound] = useState(null);
     const [playbackStatus, setPlaybackStatus] = useState();
     const [trackWidth, setTarckwidth] = useState(0)
@@ -16,7 +16,6 @@ const Sound = ({playNext, currentSound, path, isActive, hasChanged, pauseLastTra
 
     const onPlaybackStatusUpdate = (status) => {
       setPlaybackStatus(status);
-      
       setTrackMillis(status.positionMillis)
     };
 
@@ -47,7 +46,7 @@ const Sound = ({playNext, currentSound, path, isActive, hasChanged, pauseLastTra
       if(playbackStatus && playbackStatus.didJustFinish){
         playNext()
         // sound.stopAsync()
-        setIsPaused(false)
+        
       }
     }, [playbackStatus])
 
@@ -103,40 +102,39 @@ const Sound = ({playNext, currentSound, path, isActive, hasChanged, pauseLastTra
 
     useEffect(() => {
         
-        setIsPaused(isActive);
+        
     }, [isActive]);
 
 
-    // useEffect(() => {
-    //     const togglePlayback = async (play) => {
-    //         if(!sound){
-    //           return
-    //         }
-
-    //         if(!play){
-    //           return await sound.pauseAsync();
-    //         }
-            
-    //         if (hasChanged) {
-    //             pauseLastTrack(sound);
-                
-    //             await sound.replayAsync();
-    //         } else {
-    //             await sound.playFromPositionAsync(trackMillis);
-    //         }
-            
-    //     };
-
-    //     togglePlayback(isPaused);
-    //     console.log('isPaused, hasChanged, sound, pauseLastTrack')
-    // }, [isPaused, hasChanged, sound, pauseLastTrack]);
-
     
 
-    const handlePlayPause = () => {
-        console.log('123')
-        setIsPaused(!isPaused);
+    function getPlayIcon(){
+      
+      if(!playbackStatus ){
+        return playIcon
+      }
+    
+     
+      if(playbackStatus.isPlaying && isActive){
+        return pauseIcon
+      }else{
+        return playIcon
+      }
+    }
+    
+    const handlePlayPause = async () => {
+        
         setCurrentSoundIndex(index);
+        if(!playbackStatus || !isActive ){
+          return 
+        }
+        
+        if(playbackStatus.isPlaying){
+          await sound.pauseAsync();
+        }else{
+           await sound.replayAsync();
+        }
+        console.log(index,isActive,playbackStatus)
     };
 
     return (
@@ -155,7 +153,7 @@ const Sound = ({playNext, currentSound, path, isActive, hasChanged, pauseLastTra
       <TouchableOpacity onPress={handlePlayPause} style={styles.pauseBtn}>
           <Image
               style={styles.pauseBtn__Img}
-              source={isPaused ? pauseIcon : playIcon}
+              source={getPlayIcon()}
           />
       </TouchableOpacity>
     </View>

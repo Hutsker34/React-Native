@@ -2,7 +2,7 @@ import {Text, View,FlatList,  StyleSheet,Image } from 'react-native';
 import React, { useState, useEffect } from 'react';
 
 import { Audio } from 'expo-av';
-import Snowflakes from './Snowflakes'
+
 import Sound from '../components/Sound';
 
 
@@ -20,8 +20,8 @@ const names = sounds.keys().map((key) => {
 
 const HomePage =  () => {
 
-    const [hasChanged, setHasChanged] = useState(false)
-    const [currentSoundIndex , setCurrentSoundIndex] = useState(2)
+ 
+    const [currentSoundIndex , setCurrentSoundIndex] = useState(-1)
     const [ lastSound, setLastSound] = useState(null)
     const [currentQueueSound, setCurrentQueueSound] = useState(null)
    
@@ -31,15 +31,20 @@ const HomePage =  () => {
           const { sound } = await Audio.Sound.createAsync(soundFile);
 
           setCurrentQueueSound(sound)
-          
-          await sound.playAsync();
-          await new Promise(resolve => {
-            sound.setOnPlaybackStatusUpdate(playbackStatus => {
-              if (playbackStatus.didJustFinish) {
-                resolve();
-              }
+          if(currentSoundIndex < 0){
+            return
+          }else{
+            await sound.playAsync();
+            await new Promise(resolve => {
+              sound.setOnPlaybackStatusUpdate(playbackStatus => {
+                if (playbackStatus.didJustFinish) {
+                  resolve();
+                }
+              });
             });
-          });
+          }
+          
+         
     
           await sound.unloadAsync();
         }
@@ -47,10 +52,11 @@ const HomePage =  () => {
 
 
     const soundFiles = sounds.keys().map(sounds);
-    const currentSoundsQueue = soundFiles.slice(currentSoundIndex)
+    
     
 
     useEffect( () => {
+        const currentSoundsQueue = soundFiles.slice(currentSoundIndex)
         async function unloadSound(){
             if(currentQueueSound){
                 await currentQueueSound.unloadAsync();
@@ -58,22 +64,19 @@ const HomePage =  () => {
         }
         unloadSound();
         playSoundsSequentially(currentSoundsQueue)
+        
 
     }, [currentSoundIndex])
 
     function changeCurrentSound(index){
-        setHasChanged(currentSoundIndex !== index)
+       if(index !== currentSoundIndex){
+        
         setCurrentSoundIndex(index)
+       }
+        
         
     }
-    function pauseLastTrack(sound){
-        if(lastSound !== sound && lastSound !== null){
-            lastSound.pauseAsync()
-            
-        }
-        setLastSound(sound)
-    }
-
+   
     function playNext(){
         if(currentSoundIndex < soundFiles.length -1){
             setCurrentSoundIndex(currentSoundIndex +1)
@@ -85,11 +88,11 @@ const HomePage =  () => {
     
     return (
         <View style={styles.HomePageWrap}>
-             <Snowflakes/>
+             
              <FlatList
                 data={imageSources}
-                keyExtractor={(item) => item}
-                renderItem={({item , index}) => <Sound playNext={playNext}  currentSound={currentQueueSound} pauseLastTrack={pauseLastTrack}  hasChanged={hasChanged} isActive={currentSoundIndex == index} setCurrentSoundIndex={changeCurrentSound} currentSoundIndex={currentSoundIndex} name={names[index]} path={item} index={index}  />}
+                keyExtractor={(item, index) => index}
+                renderItem={({item , index}) => <Sound playNext={playNext}  currentSound={currentQueueSound}   isActive={currentSoundIndex == index} setCurrentSoundIndex={changeCurrentSound} currentSoundIndex={currentSoundIndex} name={names[index]}  index={index}  />}
             />
            
         </View>
