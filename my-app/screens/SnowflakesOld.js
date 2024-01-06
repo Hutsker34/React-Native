@@ -36,7 +36,9 @@ const Snowflakes = () => {
     setFlakes(flakes => [
       ...flakes,
       { x, y, size, speed }
+      
     ]);
+    
   };
 
 
