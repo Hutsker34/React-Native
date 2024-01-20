@@ -4,7 +4,7 @@ import { Image, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import pauseIcon from '../assets/pause.png';
 import playIcon from '../assets/play.png';
 
-const Sound = ({playNext, sound, playbackStatus, isActive, setCurrentSoundIndex, index, name }) => {
+const Sound = ({ trackMillis, playNext, sound, playbackStatus, isActive, setCurrentSoundIndex, index, name }) => {
     const ref = useRef(null);
     // Текущий объект звука Audio.Sound
 //    const [sound, setSound] = useState(null);
@@ -13,7 +13,7 @@ const Sound = ({playNext, sound, playbackStatus, isActive, setCurrentSoundIndex,
     // Ширина прогресс-бара
     const [trackWidth, setTarckwidth] = useState(0)
     // Количество проигранный секунд
-    const [trackMillis, setTrackMillis] = useState(0)
+    
     const [isPlaying, setIsPlaying] = useState(false);
 
 //    const onPlaybackStatusUpdate = (status) => {
@@ -35,7 +35,6 @@ const Sound = ({playNext, sound, playbackStatus, isActive, setCurrentSoundIndex,
     //управление progressbar
      let position = playbackStatus ? (playbackStatus.durationMillis * event.nativeEvent.locationX) / trackWidth : 0
      sound.playFromPositionAsync(position)
-     setTrackMillis(position)
    }
 
     
@@ -109,7 +108,7 @@ const Sound = ({playNext, sound, playbackStatus, isActive, setCurrentSoundIndex,
         if(isPlaying){
           await sound.pauseAsync();
         }else{
-           await sound.replayAsync();
+           await sound.playFromPositionAsync(trackMillis);
         }
 //        console.log(index,isActive,playbackStatus)
     };

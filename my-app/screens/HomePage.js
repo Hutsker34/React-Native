@@ -25,6 +25,8 @@ const HomePage =  () => {
     // Его статус
     const [playbackStatus, setPlaybackStatus] = useState(null);
 
+    const [trackMillis, setTrackMillis] = useState(0)
+
     async function playSoundsSequentially(sounds) {
         for (const soundFile of sounds) {
           const { sound } = await Audio.Sound.createAsync(soundFile);
@@ -52,7 +54,7 @@ const HomePage =  () => {
 
     const onPlaybackStatusUpdate = (status) => {
       setPlaybackStatus(status);
-//      setTrackMillis(status.positionMillis)
+      setTrackMillis(status.positionMillis);
     };
 
     useEffect(() => {
@@ -103,7 +105,7 @@ const HomePage =  () => {
              <FlatList
                 data={imageSources}
                 keyExtractor={(item, index) => index}
-                renderItem={({item , index}) => <Sound playNext={playNext}  sound={currentSound} playbackStatus={playbackStatus} isActive={currentSoundIndex == index} setCurrentSoundIndex={changeCurrentSound} currentSoundIndex={currentSoundIndex} name={names[index]}  index={index}  />}
+                renderItem={({item , index}) => <Sound trackMillis={trackMillis} playNext={playNext}  sound={currentSound} playbackStatus={playbackStatus} isActive={currentSoundIndex == index} setCurrentSoundIndex={changeCurrentSound} currentSoundIndex={currentSoundIndex} name={names[index]}  index={index}  />}
             />
         </View>
     );
