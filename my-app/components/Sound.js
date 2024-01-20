@@ -21,31 +21,32 @@ const Sound = ({playNext, sound, playbackStatus, isActive, setCurrentSoundIndex,
 ////      setTrackMillis(status.positionMillis)
 //    };
     
-//    const getProgress = () => {
-//      if (playbackStatus) {
-//        const progress =
-//          (playbackStatus.positionMillis / playbackStatus.durationMillis) * 100;
-//        return `${Math.round(progress)}%`;
-//      }
-//      return '0%';
-//    };
+   const getProgress = () => {
+    //визуальное отображение progreessbar
+     if (playbackStatus) {
+       const progress =
+         (playbackStatus.positionMillis / playbackStatus.durationMillis) * 100;
+       return `${Math.round(progress)}%`;
+     }
+     return '0%';
+   };
 
-//    function setPlayPosition(event){
-//      let position = playbackStatus ? (playbackStatus.durationMillis * event.nativeEvent.locationX) / trackWidth : 0
-//
-//      sound.playFromPositionAsync(position)
-//      setTrackMillis(position)
-//    }
+   function setPlayPosition(event){
+    //управление progressbar
+     let position = playbackStatus ? (playbackStatus.durationMillis * event.nativeEvent.locationX) / trackWidth : 0
+     sound.playFromPositionAsync(position)
+     setTrackMillis(position)
+   }
 
     
-//    useEffect(() => {
-//      if(playbackStatus && playbackStatus.didJustFinish){
-//        // Должен триггерить обновление sound и playBackStatus
-//        console.log('it doesnt happen spontaneously')
-//        playNext();
-//        // sound.stopAsync()
-//      }
-//    }, [playbackStatus])
+   useEffect(() => {
+     if(playbackStatus && playbackStatus.didJustFinish){
+       // Должен триггерить обновление sound и playBackStatus
+       console.log('it doesnt happen spontaneously')
+       playNext();
+       // sound.stopAsync()
+     }
+   }, [playbackStatus])
 
 
 //
@@ -141,7 +142,7 @@ const Sound = ({playNext, sound, playbackStatus, isActive, setCurrentSoundIndex,
     return (
     <View style={styles.track__wrap}>
       <Text  style={styles.track__wrapName}>{name}</Text>
-      {false &&
+      {isActive &&
         <View onLayout={(event) => {
           const {width} = event.nativeEvent.layout;
           setTarckwidth({width}.width)
