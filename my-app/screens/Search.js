@@ -1,17 +1,15 @@
 import {View, FlatList, Image,  StyleSheet} from 'react-native';
 import React from 'react';
-import Player from '../components/Player'
 import Menu from '../components/Menu'
 
 
 
 
-const HomePage =  ({ navigation }) => {
+const Search =  () => {
     
     return (
         <View style={styles.HomePageWrap}>
-            <Player/>
-            <Menu navigation={navigation}/>
+            <Menu/>
         </View>
     );
 };
@@ -29,4 +27,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default HomePage
+export default Search
