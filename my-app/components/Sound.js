@@ -104,7 +104,6 @@ const Sound = ({ trackMillis, playNext, sound, playbackStatus, isActive, setCurr
 
         setCurrentSoundIndex(index);
 
-        console.log('handlePlayPause', isActive);
         if(isPlaying){
           await sound.pauseAsync();
         }else{
@@ -130,12 +129,9 @@ const Sound = ({ trackMillis, playNext, sound, playbackStatus, isActive, setCurr
 //    }, [sound])
 
     useEffect(() => {
-            console.log('**********************************')
-            console.log(playbackStatus, 'inside update status', isActive, index)
             if (playbackStatus) {
                 setIsPlaying(playbackStatus.isPlaying);
             }
-            console.log('**********************************')
     }, [playbackStatus])
 
     return (

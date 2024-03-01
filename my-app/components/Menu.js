@@ -7,7 +7,6 @@ import search from '../assets/search.png'
 
 
 const Menu =  (props) => {
-    console.log('PROPS',props)
     const handleSearch = () => {
         props.navigation.navigate("Search")
     };
