@@ -1,37 +1,75 @@
 import React, { useState, useEffect} from 'react';
-import { View, TextInput,  Text, StyleSheet, FlatList } from 'react-native';
+import { View, TextInput,  Text, StyleSheet, FlatList} from 'react-native';
 import fetch from 'node-fetch';
 import Menu from '../components/Menu'
 import artist from '../assets/artists.json'
 import AutoSuggestComponent from '../components/AutoSuggestComponent'
+import AlbumComponent from '../components/AlbumComponent';
 
-
-const Search =  () => {
+const Search =  ({ navigation }) => {
     const apikey = 'd9dcb351'
 
-    const initialUrl =`https://api.jamendo.com/v3.0/artists/tracks/?client_id=${apikey}&format=jsonpretty&order=track_name_desc&name=`
-
+   
+    const GetAlbumTracksUrl = `https://api.jamendo.com/v3.0/albums/tracks/?client_id=${apikey}&format=jsonpretty&artist_name=`
+    const GetAlbumsUrl = `https://api.jamendo.com/v3.0/artists/albums/?client_id=${apikey}&format=jsonpretty&name=`
     const [artistsArray , setArtistArray] = useState([])
+    const [albums, setAlbums] = useState([])
+    const [currentAlbumName, setCurrentAlbumName] = useState('')
+    const [currentTracks , setCurrentTracks] = useState([])
     const [inputValue , setInputValue] = useState('')
 
+    function onChangeInput(value){
+        setInputValue(value)
+        setAlbums([])
+    }
 
-    function getArtistsData(){
-        const artistName = inputValue.toLowerCase().replaceAll(' ', '+')
-        fetch(initialUrl+artistName).then((data) => {
+    function getValue(value){
+        setInputValue(value)
+        const artistName = value.toLowerCase().replaceAll(' ', '+')
+        fetch(GetAlbumsUrl+artistName).then((data) => {
             return data.json()
             
-          }).then((data) => {
-            console.log(data.results[0].tracks.length)
-          })
+         }).then((data) => {
+            if(data.results[0]){
+                setAlbums(data.results[0].albums)
+            }else{
+                setAlbums([])
+            }
+           
+         })
+    }
 
+    const getArtistsData = () => {
+        const artistName = inputValue.toLowerCase().replaceAll(' ', '+')
+
+        fetch(GetAlbumsUrl+artistName).then((data) => {
+            return data.json()
+            
+         }).then((data) => {
+            if(data.results[0]){
+                setAlbums(data.results[0].albums)
+            }else{
+                setAlbums([])
+            }
+           
+         })
+
+    }
+    const SetCurrentTracks = () => {
+        const artistName = inputValue.toLowerCase().replaceAll(' ', '+')
+        fetch(`https://api.jamendo.com/v3.0/albums/tracks/?client_id=d9dcb351&format=jsonpretty&artist_name=alex+che`).then((data) => {
+            return data.json()
+         }).then((data) => {
+            // console.log('dataAlbums',data)
+         })
     }
 
     useEffect(() => {
         if(inputValue == ''){
             return
         }
-        let result = artist.filter(item => item.startsWith(inputValue)).slice(0, 10);
-        console.log(result);
+        let result = artist.filter(item => item.startsWith(inputValue) ).slice(0, 10) ;
+        //console.log('result',result);
         setArtistArray(result)
     },[inputValue])
 
@@ -40,16 +78,29 @@ const Search =  () => {
             <View style={styles.search__wrap}>
                 <TextInput
                     style={styles.input}
-                    placeholder='Useless Text'
-                    onChangeText={setInputValue}
+                    placeholder='Artists...'
+                    onChangeText={onChangeInput}
                     value={inputValue}
                     onSubmitEditing={getArtistsData}
 
                 /> 
+                {albums.length == 0 &&
+                    (<FlatList
+                        ListEmptyComponent={<Text style={styles.EmptyText}>{inputValue == "" ? '' : 'not finde((('}</Text>}
+                        data={artistsArray}
+                        keyExtractor={(item, index) => index}
+                        renderItem={({item , index}) =>
+                            
+                            <AutoSuggestComponent getArtistsDataCall={getValue}  artistName={item} index={index}/> 
+                        }
+                    />
+                    )
+                }
+                
                 <FlatList
-                    data={artistsArray}
+                    data={albums}
                     keyExtractor={(item, index) => index}
-                    renderItem={({item , index}) => <AutoSuggestComponent  onPress={getArtistsData} setInputValue={setInputValue} artistName={item} index={index}/>}
+                    renderItem={({item , index}) => <AlbumComponent navigation={navigation} setCurrentAlbumName={setCurrentAlbumName}  albumImage={item.image} albumName={item.name}  index={index}/>}
                 />
 
                 
@@ -59,7 +110,12 @@ const Search =  () => {
     );
 };
 
+
 const styles = StyleSheet.create({
+    EmptyText: {
+        color: 'white',
+        fontSize: 26
+    },
     HomePageWrap: {
         width:'100%',
         height: '100%',
@@ -73,7 +129,6 @@ const styles = StyleSheet.create({
     input: {
         backgroundColor: '#07AB80',
         maxWidth: '90%',
-        marginLeft:  20,
         marginRight: 20,
         marginTop: 20,
         borderRadius: 15,
@@ -95,6 +150,9 @@ const styles = StyleSheet.create({
         fontSize: 22,
         textAlign: 'center'
     },
+    search__wrap: {
+        paddingLeft: 30
+    }
 
 });
 

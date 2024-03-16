@@ -5,12 +5,14 @@ import { createStackNavigator } from "react-navigation-stack";
 import HomePage from "./screens/HomePage"; 
 import SignUp from "./screens/SignUp";
 import Search from "./screens/Search";
+import AlbumTracks from "./screens/AlbumTracks";
 
 const AppNavigator = createStackNavigator(
   {
     SignUp: SignUp,
     Home: HomePage,
-    Search: Search
+    Search: Search,
+    AlbumTracks: AlbumTracks
   },
   {
     defaultNavigationOptions: {
