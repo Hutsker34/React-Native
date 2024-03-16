@@ -5,8 +5,9 @@ import { createStackNavigator } from "react-navigation-stack";
 import HomePage from "./screens/HomePage"; 
 import SignUp from "./screens/SignUp";
 import Search from "./screens/Search";
-import AlbumTracks from "./screens/AlbumTracks";
-
+import AlbumTracks from "./screens/albumTracks/AlbumTracks";
+import { Provider } from 'react-redux';
+import { store } from './store'
 const AppNavigator = createStackNavigator(
   {
     SignUp: SignUp,
@@ -24,5 +25,9 @@ const AppNavigator = createStackNavigator(
 const Navigator = createAppContainer(AppNavigator);
 
 export default function App() {
-  return <Navigator />;
+  return (
+    <Provider  store={store}>
+      <Navigator />
+    </Provider> 
+  );
 }

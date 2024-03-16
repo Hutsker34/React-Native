@@ -1,9 +1,14 @@
 import { View, Text, StyleSheet, TouchableOpacity,ImageBackground} from 'react-native';
+import {getAlbumTracks} from '../screens/albumTracks/AlbumTracksSlice'
+import { useDispatch } from 'react-redux';
 
 const AlbumComponent = (props) => {
+    const dispatch = useDispatch();
+
     function AlbumTracksNavigate(){
         props.navigation.navigate("AlbumTracks")
         props.setCurrentAlbumName(props.albumName)
+        dispatch(getAlbumTracks('Some data'));
     }
     return(
         <TouchableOpacity onPress={AlbumTracksNavigate}>

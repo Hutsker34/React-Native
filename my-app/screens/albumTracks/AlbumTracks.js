@@ -1,34 +1,18 @@
 import React, { useState} from 'react';
 import { View, Text, StyleSheet, FlatList, } from 'react-native';
 import fetch from 'node-fetch';
-import Menu from '../components/Menu'
-
-import AlbumComponent from '../components/AlbumComponent';
+import Menu from '../../components/Menu'
+import { useSelector } from 'react-redux';
+import AlbumComponent from '../../components/AlbumComponent';
+import { ColorSpace } from 'react-native-reanimated';
 
 const AlbumTracks =  () => {
-    // const apikey = 'd9dcb351'
-
-    // const GetTracksUrl =`https://api.jamendo.com/v3.0/artists/tracks/?client_id=${apikey}&format=jsonpretty&order=track_name_desc&name=`
-    // const [albums, setAlbums] = useState([])
-    
-
-
-    // const getArtistsData = () => {
-    //     const artistName = inputValue.toLowerCase().replaceAll(' ', '+')
-        
-    //     fetch(GetTracksUrl+artistName).then((data) => {
-    //         return data.json()
-            
-    //       }).then((data) => {
-    //         console.log('dataTracks',data.results[0].tracks.length)
-    //       })
-
-
-    // }
+    const data = useSelector(state => state.tracks);
 
 
     return (
         <View style={styles.HomePageWrap}>
+            <Text style={styles.text}>{data}</Text>
                 {/* <FlatList
                     data={albums}
                     keyExtractor={(item, index) => index}
@@ -50,6 +34,10 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingTop: 40,
     },
+    text: {
+        color: 'white',
+        fontSize: 26
+    }
 
 });
 
