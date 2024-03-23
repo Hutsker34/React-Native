@@ -5,8 +5,11 @@ import Menu from '../components/Menu'
 import artist from '../assets/artists.json'
 import AutoSuggestComponent from '../components/AutoSuggestComponent'
 import AlbumComponent from '../components/AlbumComponent';
+import { useDispatch } from 'react-redux';
+import { setAlbumId } from './albumTracks/AlbumTracksSlice';
 
 const Search =  ({ navigation }) => {
+    const dispatch = useDispatch()
     const apikey = 'd9dcb351'
 
    
@@ -32,6 +35,8 @@ const Search =  ({ navigation }) => {
          }).then((data) => {
             if(data.results[0]){
                 setAlbums(data.results[0].albums)
+                // dispatch(setAlbumId(data.results[0].albums))
+                console.log('DATA',data.results[0].albums)
             }else{
                 setAlbums([])
             }
@@ -41,7 +46,7 @@ const Search =  ({ navigation }) => {
 
     const getArtistsData = () => {
         const artistName = inputValue.toLowerCase().replaceAll(' ', '+')
-
+        dispatch(setArtistName(artistName))
         fetch(GetAlbumsUrl+artistName).then((data) => {
             return data.json()
             
@@ -55,14 +60,14 @@ const Search =  ({ navigation }) => {
          })
 
     }
-    const SetCurrentTracks = () => {
-        const artistName = inputValue.toLowerCase().replaceAll(' ', '+')
-        fetch(`https://api.jamendo.com/v3.0/albums/tracks/?client_id=d9dcb351&format=jsonpretty&artist_name=alex+che`).then((data) => {
-            return data.json()
-         }).then((data) => {
-            // console.log('dataAlbums',data)
-         })
-    }
+    // const SetCurrentTracks = () => {
+    //     const artistName = inputValue.toLowerCase().replaceAll(' ', '+')
+    //     fetch(`https://api.jamendo.com/v3.0/albums/tracks/?client_id=d9dcb351&format=jsonpretty&artist_name=alex+che`).then((data) => {
+    //         return data.json()
+    //      }).then((data) => {
+    //         // console.log('dataAlbums',data)
+    //      })
+    // }
 
     useEffect(() => {
         if(inputValue == ''){
@@ -100,7 +105,7 @@ const Search =  ({ navigation }) => {
                 <FlatList
                     data={albums}
                     keyExtractor={(item, index) => index}
-                    renderItem={({item , index}) => <AlbumComponent navigation={navigation} setCurrentAlbumName={setCurrentAlbumName}  albumImage={item.image} albumName={item.name}  index={index}/>}
+                    renderItem={({item , index}) => <AlbumComponent navigation={navigation}  setCurrentAlbumName={setCurrentAlbumName}  albumImage={item.image} albumName={item.name} albumId={item.id}  index={index}/>}
                 />
 
                 

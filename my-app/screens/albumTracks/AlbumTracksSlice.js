@@ -2,7 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 import { act } from "react-dom/test-utils";
 
 const initialState = {
-  tracks: ''
+  tracks: '',
+  albumId: ''
  
 };
 
@@ -10,8 +11,11 @@ export const AlbumTracksSlice = createSlice({
   name: "article",
   initialState,
   reducers: {
-    getAlbumTracks: (state, action) => {
+    setAlbumTracks: (state, action) => {
       state.tracks = action.payload
+    },
+    setAlbumId: (state, action) => {
+      state.albumId = action.payload
     },
     
   },
@@ -19,6 +23,6 @@ export const AlbumTracksSlice = createSlice({
   },
 );
 
-export const {getAlbumTracks} = AlbumTracksSlice.actions;
+export const {setAlbumTracks, setAlbumId} = AlbumTracksSlice.actions;
 
 export default AlbumTracksSlice.reducer;

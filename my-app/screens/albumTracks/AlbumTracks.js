@@ -7,8 +7,10 @@ import AlbumComponent from '../../components/AlbumComponent';
 import { ColorSpace } from 'react-native-reanimated';
 
 const AlbumTracks =  () => {
-    const data = useSelector(state => state.tracks);
-
+    const data = useSelector(state => {
+        return state.album.tracks
+    });
+    // console.log('data', data)
 
     return (
         <View style={styles.HomePageWrap}>
