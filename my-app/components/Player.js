@@ -1,4 +1,4 @@
-import {FlatList} from 'react-native';
+import {FlatList,Text, View,StyleSheet} from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Audio } from 'expo-av';
@@ -102,12 +102,31 @@ function Player() {
         }
     }
     return (
-        <FlatList
-            
-            data={tracks}
-            keyExtractor={(item, index) => index}
-            renderItem={({item , index}) => <Sound trackMillis={trackMillis} playNext={playNext}  sound={currentSound} playbackStatus={playbackStatus} isActive={currentSoundIndex == index} setCurrentSoundIndex={changeCurrentSound} currentSoundIndex={currentSoundIndex} name={item.name}  index={index}  />}
-        />
+        <View>
+        {tracks.length == 0 &&
+            <Text style={styles.noTrack__text}>Скоро тут будут ваши треки</Text>
+        }
+        {tracks.length > 0 &&
+            <FlatList
+                data={tracks}
+                keyExtractor={(item, index) => index}
+                renderItem={({item , index}) => <Sound trackMillis={trackMillis} playNext={playNext}  sound={currentSound} playbackStatus={playbackStatus} isActive={currentSoundIndex == index} setCurrentSoundIndex={changeCurrentSound} currentSoundIndex={currentSoundIndex} name={item.name}  index={index}  />}
+            />
+        }
+       
+        </View>
+        
     )
+   
 }
+const styles = StyleSheet.create({
+    noTrack__text: {
+        color: 'white',
+        fontSize: 22
+
+    }
+
+        
+
+})
 export default Player
