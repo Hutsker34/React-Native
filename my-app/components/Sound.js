@@ -6,20 +6,10 @@ import playIcon from '../assets/play.png';
 
 const Sound = ({ trackMillis, playNext, sound, playbackStatus, isActive, setCurrentSoundIndex, index, name }) => {
     const ref = useRef(null);
-    // Текущий объект звука Audio.Sound
-//    const [sound, setSound] = useState(null);
-    // Объект статуса, связанный с sound
-//    const [playbackStatus, setPlaybackStatus] = useState(null);
-    // Ширина прогресс-бара
     const [trackWidth, setTarckwidth] = useState(0)
     // Количество проигранный секунд
     
     const [isPlaying, setIsPlaying] = useState(false);
-
-//    const onPlaybackStatusUpdate = (status) => {
-//      setPlaybackStatus(status);
-////      setTrackMillis(status.positionMillis)
-//    };
     
    const getProgress = () => {
     //визуальное отображение progreessbar
@@ -47,50 +37,6 @@ const Sound = ({ trackMillis, playNext, sound, playbackStatus, isActive, setCurr
      }
    }, [playbackStatus])
 
-
-//
-//    useEffect(() => {
-//      if (!sound ) {
-//        return
-//      }
-//
-//      const loadSound = async () => {
-//        const status = await sound.getStatusAsync()
-//        // Должно триггерить обновление playBackStatus
-//        // Когда меняется sound? Не триггерит ли он по цепочке currentSoundIndex через playNext
-//        if(status.isLoaded){
-////          sound.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
-//        }
-//      }
-//
-//      loadSound();
-//    }, [sound]);
-
-
-
-//    useEffect(() => {
-////        let isCancelled = false;
-//        const updateAudio = async () => {
-//          if(sound){
-//            const status = await currentSound.getStatusAsync()
-//            if(status.isLoaded){
-//              // Какая у него связанность с sound, по ссылке или нет
-//              // Не срабатывает ли этот код при нажатии на паузу
-//              setSound(currentSound)
-//            }
-//          }
-//        }
-//        updateAudio()
-//
-////        return () => {
-////            isCancelled = true;
-////            sound?.unloadAsync();
-////        };
-//
-//    }, [sound]);
-
-
-
     function getPlayIcon(){
       if(isPlaying && isActive){
         return pauseIcon
@@ -111,27 +57,21 @@ const Sound = ({ trackMillis, playNext, sound, playbackStatus, isActive, setCurr
         }
     };
 
-//    useEffect(() => {
-//      const updateStatus = async () => {
-//
-//        const playbackStatus = await sound.getStatusAsync();
-//
-//        sound.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
-//      }
-//
-//      if (!sound) {
-//          return
-//      }
-//      updateStatus();
-//
-//      return () => sound.setOnPlaybackStatusUpdate(null);
-//    }, [sound])
-
     useEffect(() => {
             if (playbackStatus) {
                 setIsPlaying(playbackStatus.isPlaying);
             }
     }, [playbackStatus])
+
+    // Эффект для приостановки трека при размонтировании компонента
+    useEffect(() => {
+        if (sound && isActive) {
+            console.log('sound exists');
+            return () => {
+                sound.pauseAsync();
+            };
+        }
+    }, [sound]); // Зависимость от sound, чтобы эффект реагировал на изменения
 
     return (
     <View style={styles.track__wrap}>
