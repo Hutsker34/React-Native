@@ -7,10 +7,8 @@ const AlbumComponent = (props) => {
     const dispatch = useDispatch();
     const artistName = useSelector(state => state.album.artistName)
     const apikey = 'd9dcb351'
-    console.log(props.albumId)
    
     const GetAlbumTracksUrl = `https://api.jamendo.com/v3.0/albums/tracks/?client_id=${apikey}&format=jsonpretty&artist_name=`
-    console.log('url', GetAlbumTracksUrl+artistName)
     function getAlbumsTracks(){
         fetch(GetAlbumTracksUrl+artistName).then((data) => {
             return data.json()

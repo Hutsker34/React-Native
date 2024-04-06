@@ -41,7 +41,7 @@ const Sound = ({ trackMillis, playNext, sound, playbackStatus, isActive, setCurr
    useEffect(() => {
      if(playbackStatus && playbackStatus.didJustFinish){
        // Должен триггерить обновление sound и playBackStatus
-       console.log('it doesnt happen spontaneously')
+
        playNext();
        // sound.stopAsync()
      }
@@ -109,7 +109,6 @@ const Sound = ({ trackMillis, playNext, sound, playbackStatus, isActive, setCurr
         }else{
            await sound.playFromPositionAsync(trackMillis);
         }
-//        console.log(index,isActive,playbackStatus)
     };
 
 //    useEffect(() => {

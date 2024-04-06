@@ -22,7 +22,6 @@ async function fetchAllData(initialUrl) {
         results = results.concat(data.results.map(item => item.name)); // Добавляем полученные данные
         nextUrl = data.headers.next; // Обновляем URL для следующего запроса
         if(count % 10 == 0){
-            console.log('pause')
             await delay(1000 * count / 10);
         }
         count++
@@ -31,7 +30,6 @@ async function fetchAllData(initialUrl) {
         break; // Прерываем цикл в случае ошибки
       }
     }
-    console.log(results)
     return results; // Возвращаем все собранные данные
   }
   
