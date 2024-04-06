@@ -10,23 +10,24 @@ const AlbumComponent = (props) => {
     console.log(props.albumId)
    
     const GetAlbumTracksUrl = `https://api.jamendo.com/v3.0/albums/tracks/?client_id=${apikey}&format=jsonpretty&artist_name=`
-
-    function getAlbums(){
-        console.log('NAME',artistName)
+    console.log('url', GetAlbumTracksUrl+artistName)
+    function getAlbumsTracks(){
         fetch(GetAlbumTracksUrl+artistName).then((data) => {
             return data.json()
             
          }).then((data) => {
-            console.log(data.results[0].tracks)
-           
+            return data.results.filter(el => el.id == props.albumId)
+            
+            
+         }).then((data) => {
+            dispatch(setAlbumTracks(data[0].tracks))
          })
     }
 
     function AlbumTracksNavigate(){
-        getAlbums()
+        getAlbumsTracks()
         props.navigation.navigate("AlbumTracks")
         props.setCurrentAlbumName(props.albumName)
-        dispatch(setAlbumTracks('Some data'));
     }
     return(
         <TouchableOpacity onPress={AlbumTracksNavigate}>

@@ -21,8 +21,11 @@ const Menu =  (props) => {
 };
 const styles = StyleSheet.create({
     menu: {
+        position: 'absolute',
+        bottom: 0,
         width: '100%',
         maxHeight: 70,
+        height: 70,
         backgroundColor: '#07AB80',
         flex: 1,
         paddingTop: 18,

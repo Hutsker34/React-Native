@@ -6,7 +6,7 @@ import artist from '../assets/artists.json'
 import AutoSuggestComponent from '../components/AutoSuggestComponent'
 import AlbumComponent from '../components/AlbumComponent';
 import { useDispatch } from 'react-redux';
-import { setAlbumId } from './albumTracks/AlbumTracksSlice';
+import { setArtistName } from './albumTracks/AlbumTracksSlice';
 
 const Search =  ({ navigation }) => {
     const dispatch = useDispatch()
@@ -29,6 +29,7 @@ const Search =  ({ navigation }) => {
     function getValue(value){
         setInputValue(value)
         const artistName = value.toLowerCase().replaceAll(' ', '+')
+        dispatch(setArtistName(artistName))
         fetch(GetAlbumsUrl+artistName).then((data) => {
             return data.json()
             
@@ -36,7 +37,7 @@ const Search =  ({ navigation }) => {
             if(data.results[0]){
                 setAlbums(data.results[0].albums)
                 // dispatch(setAlbumId(data.results[0].albums))
-                console.log('DATA',data.results[0].albums)
+                
             }else{
                 setAlbums([])
             }

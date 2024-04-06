@@ -175,13 +175,13 @@ const styles = StyleSheet.create({
     maxHeight: 45,
     justifyContent: 'space-between',
     alignItems: 'center',
-    width: '74%',
+    width: 'calc(100% - 40px)',
     paddingHorizontal: 20,
     paddingVertical: 10,
     backgroundColor: '#07AB80',
-    marginTop: 40,
+    marginTop: 20,
     marginLeft: 10,
-    
+    marginRight: 10,
     paddingVertical: 5,
     borderRadius: 20,
 

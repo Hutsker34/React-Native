@@ -2,6 +2,7 @@ import React, { useState} from 'react';
 import { View, Text, StyleSheet, FlatList, } from 'react-native';
 import fetch from 'node-fetch';
 import Menu from '../../components/Menu'
+import Player from '../../components/Player';
 import { useSelector } from 'react-redux';
 import AlbumComponent from '../../components/AlbumComponent';
 import { ColorSpace } from 'react-native-reanimated';
@@ -10,16 +11,11 @@ const AlbumTracks =  () => {
     const data = useSelector(state => {
         return state.album.tracks
     });
-    // console.log('data', data)
+    console.log('data', data)
 
     return (
         <View style={styles.HomePageWrap}>
-            <Text style={styles.text}>{data}</Text>
-                {/* <FlatList
-                    data={albums}
-                    keyExtractor={(item, index) => index}
-                    renderItem={({item , index}) => <AlbumComponent albumImage={item.image}  index={index}/>}
-                /> */}
+            <Player tracks={data}/>
             <Menu/>
         </View>
     );
@@ -28,7 +24,7 @@ const AlbumTracks =  () => {
 const styles = StyleSheet.create({
     HomePageWrap: {
         width:'100%',
-        height: '100%',
+        height: 'calc(100vh - 70px)',
         backgroundColor: '#111',
         flex: 1,
         alignItems: 'start',

@@ -18,7 +18,7 @@ async function fetchAllData(initialUrl) {
         const response = await fetch(nextUrl);
         if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
-        console.log(data.headers.next)
+        
         results = results.concat(data.results.map(item => item.name)); // Добавляем полученные данные
         nextUrl = data.headers.next; // Обновляем URL для следующего запроса
         if(count % 10 == 0){

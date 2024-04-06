@@ -1,12 +1,11 @@
-import {View, FlatList, Image,  StyleSheet} from 'react-native';
-import React from 'react';
+import {View, FlatList, Image,  StyleSheet, Button} from 'react-native';
+import React  from 'react';
 import Player from '../components/Player'
 import Menu from '../components/Menu'
 
 
 
-
-const HomePage =  ({ navigation }) => {
+const HomePage = ({ navigation }) => {
     
     return (
         <View style={styles.HomePageWrap}>
