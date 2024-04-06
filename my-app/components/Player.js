@@ -97,7 +97,7 @@ function Player() {
     }
 
     function playNext() {
-        if (currentSoundIndex < soundFiles.length - 1) {
+        if (currentSoundIndex < tracks.length - 1) {
             setCurrentSoundIndex(currentSoundIndex + 1)
         }
     }
