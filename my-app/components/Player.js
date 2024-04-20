@@ -17,9 +17,9 @@ import Sound from '../components/Sound';
 // })
 
 
-function Player() {
+function Player(props) {
 
-    const tracks = useSelector(state => state.album.tracks)
+    const tracks = props.tracks
     const [currentSoundIndex, setCurrentSoundIndex] = useState(-1)
     // Текущий трек (объект Audio.Sound)
     const [currentSound, setCurrentSound] = useState(null)

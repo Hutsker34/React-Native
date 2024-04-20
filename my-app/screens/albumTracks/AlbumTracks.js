@@ -11,7 +11,7 @@ const AlbumTracks =  () => {
     const data = useSelector(state => {
         return state.album.tracks
     });
-
+    
     return (
         <View style={styles.HomePageWrap}>
             <Player tracks={data}/>

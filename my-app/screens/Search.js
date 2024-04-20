@@ -7,7 +7,7 @@ import AutoSuggestComponent from '../components/AutoSuggestComponent'
 import AlbumComponent from '../components/AlbumComponent';
 import { useDispatch } from 'react-redux';
 import { setArtistName } from './albumTracks/AlbumTracksSlice';
-
+import { getTestData } from '../storage';
 const Search =  ({ navigation }) => {
     const dispatch = useDispatch()
     const apikey = 'd9dcb351'
@@ -79,6 +79,16 @@ const Search =  ({ navigation }) => {
         setArtistArray(result)
     },[inputValue])
 
+    useEffect(() => {
+        const fetchData = async () => {
+            const storedData = await getTestData();
+            console.log('storedData',storedData)
+        };
+        
+        fetchData();
+    }, []);
+    
+    
     return (
         <View style={styles.HomePageWrap}>
             <View style={styles.search__wrap}>
@@ -90,6 +100,7 @@ const Search =  ({ navigation }) => {
                     onSubmitEditing={getArtistsData}
 
                 /> 
+                <Text style={styles.storageTest}>123</Text>
                 {albums.length == 0 &&
                     (<FlatList
                         ListEmptyComponent={<Text style={styles.EmptyText}>{inputValue == "" ? '' : 'not finde((('}</Text>}
@@ -118,6 +129,9 @@ const Search =  ({ navigation }) => {
 
 
 const styles = StyleSheet.create({
+    storageTest: {
+        color: 'white'
+    },
     EmptyText: {
         color: 'white',
         fontSize: 26

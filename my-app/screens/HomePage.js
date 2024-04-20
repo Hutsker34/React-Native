@@ -1,15 +1,18 @@
-import {View, FlatList, Image,  StyleSheet, Button} from 'react-native';
+import {View, FlatList, Image,  StyleSheet, Button, Text} from 'react-native';
 import React  from 'react';
 import Player from '../components/Player'
 import Menu from '../components/Menu'
-
+import { useSelector } from 'react-redux';
+import { storeTestData } from '../storage';
 
 
 const HomePage = ({ navigation }) => {
     
+    storeTestData()
+    const tracks = useSelector(state => state.album.savedTracks)
     return (
         <View style={styles.HomePageWrap}>
-            <Player/>
+            <Player tracks={tracks}/>
             <Menu navigation={navigation}/>
         </View>
     );

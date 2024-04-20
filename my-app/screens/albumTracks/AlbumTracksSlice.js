@@ -4,7 +4,8 @@ import { act } from "react-dom/test-utils";
 const initialState = {
   tracks: [],
   albumId: '',
-  artistName: ''
+  artistName: '',
+  savedTracks: []
  
 };
 
@@ -20,6 +21,9 @@ export const AlbumTracksSlice = createSlice({
     },
     setArtistName: (state, action) => {
       state.artistName = action.payload
+    },
+    setSavedTracks: (state, action) => {
+      state.savedTracks = action.payload
     }
     
   },
@@ -27,6 +31,6 @@ export const AlbumTracksSlice = createSlice({
   },
 );
 
-export const {setAlbumTracks, setAlbumId, setArtistName} = AlbumTracksSlice.actions;
+export const {setAlbumTracks, setAlbumId, setArtistName, setSavedTracks} = AlbumTracksSlice.actions;
 
 export default AlbumTracksSlice.reducer;
