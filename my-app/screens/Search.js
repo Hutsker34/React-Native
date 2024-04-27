@@ -7,7 +7,7 @@ import AutoSuggestComponent from '../components/AutoSuggestComponent'
 import AlbumComponent from '../components/AlbumComponent';
 import { useDispatch } from 'react-redux';
 import { setArtistName } from './albumTracks/AlbumTracksSlice';
-import { getTestData } from '../storage';
+
 const Search =  ({ navigation }) => {
     const dispatch = useDispatch()
     const apikey = 'd9dcb351'
@@ -61,32 +61,17 @@ const Search =  ({ navigation }) => {
          })
 
     }
-    // const SetCurrentTracks = () => {
-    //     const artistName = inputValue.toLowerCase().replaceAll(' ', '+')
-    //     fetch(`https://api.jamendo.com/v3.0/albums/tracks/?client_id=d9dcb351&format=jsonpretty&artist_name=alex+che`).then((data) => {
-    //         return data.json()
-    //      }).then((data) => {
-    //         // console.log('dataAlbums',data)
-    //      })
-    // }
+  
 
     useEffect(() => {
         if(inputValue == ''){
             return
         }
         let result = artist.filter(item => item.startsWith(inputValue) ).slice(0, 10) ;
-        //console.log('result',result);
         setArtistArray(result)
     },[inputValue])
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const storedData = await getTestData();
-            console.log('storedData',storedData)
-        };
-        
-        fetchData();
-    }, []);
+    
     
     
     return (
@@ -100,7 +85,6 @@ const Search =  ({ navigation }) => {
                     onSubmitEditing={getArtistsData}
 
                 /> 
-                <Text style={styles.storageTest}>123</Text>
                 {albums.length == 0 &&
                     (<FlatList
                         ListEmptyComponent={<Text style={styles.EmptyText}>{inputValue == "" ? '' : 'not finde((('}</Text>}

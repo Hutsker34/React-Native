@@ -101,6 +101,11 @@ function Player(props) {
             setCurrentSoundIndex(currentSoundIndex + 1)
         }
     }
+    function clickAddTrack(item) {
+        if(props.addTrack){
+            props.addTrack(item)
+        }
+    }
     return (
         <View>
         {tracks.length == 0 &&
@@ -110,7 +115,7 @@ function Player(props) {
             <FlatList
                 data={tracks}
                 keyExtractor={(item, index) => index}
-                renderItem={({item , index}) => <Sound trackMillis={trackMillis} playNext={playNext}  sound={currentSound} playbackStatus={playbackStatus} isActive={currentSoundIndex == index} setCurrentSoundIndex={changeCurrentSound} currentSoundIndex={currentSoundIndex} name={item.name}  index={index}  />}
+                renderItem={({item , index}) => <Sound clickAddTrack={clickAddTrack} item={item} showAddButton={props.showAddButton}  trackMillis={trackMillis} playNext={playNext}  sound={currentSound} playbackStatus={playbackStatus} isActive={currentSoundIndex == index} setCurrentSoundIndex={changeCurrentSound} currentSoundIndex={currentSoundIndex} name={item.name}  index={index}  />}
             />
         }
        

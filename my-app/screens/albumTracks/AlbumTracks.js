@@ -6,15 +6,28 @@ import Player from '../../components/Player';
 import { useSelector } from 'react-redux';
 import AlbumComponent from '../../components/AlbumComponent';
 import { ColorSpace } from 'react-native-reanimated';
+import { storeTracks } from '../../storage';
+import Toast from 'react-native-toast-message';
+
 
 const AlbumTracks =  () => {
     const data = useSelector(state => {
         return state.album.tracks
     });
+
+   
+    const addTrack = async (track) => {
+        const status = await storeTracks(track);
+        showToast(status)
+    };
+        
+    const showToast = (status) => {
+        Toast.show(status);
+      }
     
     return (
         <View style={styles.HomePageWrap}>
-            <Player tracks={data}/>
+            <Player showAddButton={true} addTrack={addTrack} tracks={data}/>
             <Menu/>
         </View>
     );

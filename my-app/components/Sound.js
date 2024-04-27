@@ -4,7 +4,7 @@ import { Image, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import pauseIcon from '../assets/pause.png';
 import playIcon from '../assets/play.png';
 
-const Sound = ({ trackMillis, playNext, sound, playbackStatus, isActive, setCurrentSoundIndex, index, name }) => {
+const Sound = ({ trackMillis, playNext, sound, playbackStatus, isActive, setCurrentSoundIndex, index, name ,showAddButton, clickAddTrack, item}) => {
     const ref = useRef(null);
     const [trackWidth, setTarckwidth] = useState(0)
     // Количество проигранный секунд
@@ -66,12 +66,13 @@ const Sound = ({ trackMillis, playNext, sound, playbackStatus, isActive, setCurr
     // Эффект для приостановки трека при размонтировании компонента
     useEffect(() => {
         if (sound && isActive) {
-            console.log('sound exists');
             return () => {
                 sound.pauseAsync();
             };
         }
     }, [sound]); // Зависимость от sound, чтобы эффект реагировал на изменения
+
+
 
     return (
     <View style={styles.track__wrap}>
@@ -85,6 +86,11 @@ const Sound = ({ trackMillis, playNext, sound, playbackStatus, isActive, setCurr
           ref={ref} onTouchStart={(event) => setPlayPosition(event)} style={styles.progressBarContainer}>
         <View style={[styles.progressBar, { width: getProgress() }]} />
         </View>
+      }
+      {showAddButton &&
+        <TouchableOpacity onPress={() => {clickAddTrack(item)}} style={styles.pauseBtn}>
+          <Text>ADD</Text>
+        </TouchableOpacity>
       }
       <TouchableOpacity onPress={handlePlayPause} style={styles.pauseBtn}>
           <Image

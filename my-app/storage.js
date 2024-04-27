@@ -1,30 +1,49 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const storeTestData = async () => {
-    let num = await AsyncStorage.getItem('my-key');
-    console.log('NUM', num)
-    num = Number(num)
 
-    try {
-      await AsyncStorage.setItem('my-key', JSON.stringify(+num +1));
-    } catch (e) {
-      // saving error
+const storeTracks = async (newTrack) => {
+  try {
+    let existingArrayJson  = await AsyncStorage.getItem('userTracks');
+    let userTracks = existingArrayJson ? JSON.parse(existingArrayJson) : [];
+    if(!userTracks.find(el => el.id == newTrack.id)){
+      userTracks.push(newTrack);
+    }else{
+      return {
+        type: 'info',
+        text1: 'warning',
+        text2: 'track already added'
+      }
     }
-  };
 
-const getTestData = async () => {
-    try {
-        const value = await AsyncStorage.getItem('my-key');
-        return JSON.parse(value)
-        }
-    catch (e) {
-        // error reading value
-    }
+    let jsonValue = JSON.stringify(userTracks);
+
+    await AsyncStorage.setItem('userTracks', jsonValue);
+    return {
+        type: 'success',
+        text1: 'success',
+        text2: 'track added'
+      }
+  } catch (e) {
+    console.log('storeTracks error', e)
+    return  {
+        type: 'error',
+        text1: 'error',
+        text2: 'track dont added'
+      }
+  }
+};
+
+const getTracks = async () => {
+  try {
+    const jsonValue = await AsyncStorage.getItem('userTracks');
+    return jsonValue != null ? JSON.parse(jsonValue) : [];
+  } catch (e) {
+    console.log('getTracks error', e)
+  }
 };
 
 
 
 
 
-
-export {storeTestData, getTestData}
+export {storeTracks, getTracks}

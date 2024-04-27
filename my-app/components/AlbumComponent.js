@@ -18,7 +18,6 @@ const AlbumComponent = (props) => {
             
             
          }).then((data) => {
-            console.log('TRACKS',setAlbumTracks(data[0].tracks))
             dispatch(setAlbumTracks(data[0].tracks))
          })
     }
