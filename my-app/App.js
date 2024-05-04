@@ -9,6 +9,8 @@ import SandBox from './components/SandBox'
 import AlbumTracks from "./screens/albumTracks/AlbumTracks";
 import { Provider } from 'react-redux';
 import { store } from './store'
+import { PersistGate } from 'redux-persist/integration/react'
+import { persistor } from "./store";
 
 const AppNavigator = createStackNavigator(
   {
@@ -30,8 +32,10 @@ const Navigator = createAppContainer(AppNavigator);
 export default function App() {
   return (
     <Provider  store={store}>
-      <Navigator />
-      <Toast />
+      <PersistGate persistor={persistor} loading={null}>
+        <Navigator />
+        <Toast />
+      </PersistGate>
     </Provider> 
   );
 }

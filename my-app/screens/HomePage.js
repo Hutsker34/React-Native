@@ -3,24 +3,28 @@ import React  from 'react';
 import Player from '../components/Player'
 import Menu from '../components/Menu'
 import { useEffect , useState} from 'react';
-import { useSelector } from 'react-redux';
-import { getTracks } from '../storage'; 
-
-
+import { useSelector, useDispatch } from 'react-redux';
+import Toast from 'react-native-toast-message';
+import { removeTrack } from './albumTracks/AlbumTracksSlice';
 
 const HomePage = ({ navigation }) => {
-    const [TrackArray, setTracksArray] = useState([])
-    
-    useEffect(() => {
-        const getTracksArray = async () => {
-            let storedData = await getTracks();
-            setTracksArray(storedData)
-        };
-        getTracksArray()
-    },[])
+    const dispatch = useDispatch()
+    const tracks = useSelector(state => state.album.savedTracks)
+  
+    const deleteTrack = async (track) => {
+        console.log('DELETE')
+        dispatch(removeTrack(track))
+        showToast()
+        
+    };
+    const showToast = (status) => {
+        Toast.show(status);
+    }
     return (
         <View style={styles.HomePageWrap}>
-            <Player showAddButton={false} tracks={TrackArray}/>
+            <View style={styles.player__wrap}>
+                <Player deleteTrack={deleteTrack} showAddButton={false} showRemoveButton={true} tracks={tracks}/>
+            </View>
             <Menu navigation={navigation}/>
         </View>
     );
@@ -34,7 +38,9 @@ const styles = StyleSheet.create({
             alignItems: 'center',
             paddingTop: 40,
         },
-
+    player__wrap: {
+        width: '100%'
+    },
         
 
 })

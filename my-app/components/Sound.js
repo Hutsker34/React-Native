@@ -1,13 +1,20 @@
 import React, { useState, useEffect , useRef} from 'react';
 import { Audio } from 'expo-av';
 import { Image, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { useSelector } from 'react-redux';
+import { getTrackIsFavorite } from '../screens/albumTracks/AlbumTracksSlice';
 import pauseIcon from '../assets/pause.png';
 import playIcon from '../assets/play.png';
+import liked from '../assets/liked.png'
+import notLiked from '../assets/notLiked.png'
 
-const Sound = ({ trackMillis, playNext, sound, playbackStatus, isActive, setCurrentSoundIndex, index, name ,showAddButton, clickAddTrack, item}) => {
+const Sound = ({ trackMillis, playNext, sound, playbackStatus, isActive, setCurrentSoundIndex, index, name ,showAddButton, clickAddTrack, item, showRemoveButton, clickRemoveTrack}) => {
     const ref = useRef(null);
     const [trackWidth, setTarckwidth] = useState(0)
+    const [likeImg, setLikeImg] = useState(false)
     // Количество проигранный секунд
+
+    const trackIsFavorit = useSelector(state => getTrackIsFavorite(state, item.id));
     
     const [isPlaying, setIsPlaying] = useState(false);
     
@@ -87,17 +94,27 @@ const Sound = ({ trackMillis, playNext, sound, playbackStatus, isActive, setCurr
         <View style={[styles.progressBar, { width: getProgress() }]} />
         </View>
       }
-      {showAddButton &&
-        <TouchableOpacity onPress={() => {clickAddTrack(item)}} style={styles.pauseBtn}>
-          <Text>ADD</Text>
+      <View style={styles.conditionControl__btn}>
+        {showAddButton &&
+          <TouchableOpacity onPress={() => {clickAddTrack(item), setLikeImg(!likeImg)}} style={styles.pauseBtn}>
+            <Image 
+              source={trackIsFavorit ? liked : notLiked }
+            />
+          </TouchableOpacity>
+        }
+        {showRemoveButton &&
+          <TouchableOpacity onPress={() => {clickRemoveTrack(item)}} style={styles.pauseBtn}>
+            <Text>X</Text>
+          </TouchableOpacity>
+        }
+      
+        <TouchableOpacity onPress={handlePlayPause} style={styles.pauseBtn}>
+            <Image
+                style={styles.pauseBtn__Img}
+                source={getPlayIcon()}
+            />
         </TouchableOpacity>
-      }
-      <TouchableOpacity onPress={handlePlayPause} style={styles.pauseBtn}>
-          <Image
-              style={styles.pauseBtn__Img}
-              source={getPlayIcon()}
-          />
-      </TouchableOpacity>
+      </View>
     </View>
     );
 };
@@ -149,6 +166,13 @@ const styles = StyleSheet.create({
     width: 50,
     height: '100%',
     borderRadius: 2.5,
+  },
+  conditionControl__btn: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    maxWidth: 50
   },
   playIcon: {
     // Your play icon styles

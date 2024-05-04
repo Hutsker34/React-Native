@@ -9,6 +9,13 @@ const initialState = {
  
 };
 
+export const selectTracks = state => state.savedTracks;
+
+export const getTrackIsFavorite = (state, itemId) => {
+  return !!state.album.savedTracks.find(item => item.id === itemId);
+}
+  
+
 export const AlbumTracksSlice = createSlice({
   name: "article",
   initialState,
@@ -22,8 +29,13 @@ export const AlbumTracksSlice = createSlice({
     setArtistName: (state, action) => {
       state.artistName = action.payload
     },
-    setSavedTracks: (state, action) => {
-      state.savedTracks = action.payload
+    setSavedTrack: (state, action) => {
+      const array = [action.payload, ...state.savedTracks]
+      state.savedTracks = array
+    },
+    removeTrack: (state, action) => {
+      const array = state.savedTracks.filter(item => item.id !== action.payload.id)
+      state.savedTracks = array
     }
     
   },
@@ -31,6 +43,7 @@ export const AlbumTracksSlice = createSlice({
   },
 );
 
-export const {setAlbumTracks, setAlbumId, setArtistName, setSavedTracks} = AlbumTracksSlice.actions;
+
+export const {setAlbumTracks, setAlbumId, setArtistName, setSavedTrack, removeTrack} = AlbumTracksSlice.actions;
 
 export default AlbumTracksSlice.reducer;

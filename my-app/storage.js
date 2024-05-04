@@ -3,11 +3,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const storeTracks = async (newTrack) => {
   try {
-    let existingArrayJson  = await AsyncStorage.getItem('userTracks');
+    let existingArrayJson = await AsyncStorage.getItem('userTracks');
     let userTracks = existingArrayJson ? JSON.parse(existingArrayJson) : [];
-    if(!userTracks.find(el => el.id == newTrack.id)){
+    if (!userTracks.find(el => el.id == newTrack.id)) {
       userTracks.push(newTrack);
-    }else{
+    } else {
       return {
         type: 'info',
         text1: 'warning',
@@ -19,17 +19,17 @@ const storeTracks = async (newTrack) => {
 
     await AsyncStorage.setItem('userTracks', jsonValue);
     return {
-        type: 'success',
-        text1: 'success',
-        text2: 'track added'
-      }
+      type: 'success',
+      text1: 'success',
+      text2: 'track added'
+    }
   } catch (e) {
     console.log('storeTracks error', e)
-    return  {
-        type: 'error',
-        text1: 'error',
-        text2: 'track dont added'
-      }
+    return {
+      type: 'error',
+      text1: 'error',
+      text2: 'track dont added'
+    }
   }
 };
 
@@ -43,7 +43,33 @@ const getTracks = async () => {
 };
 
 
+const removeTracks = async (removedTrack) => {
+  try {
+    let existingArrayJson = await AsyncStorage.getItem('userTracks');
+    let userTracks = JSON.parse(existingArrayJson)
+    let newArray = userTracks.filter(item => item.id !== removedTrack.id)
+    
+
+    let jsonValue = JSON.stringify(newArray);
+ 
+    await AsyncStorage.setItem('userTracks', jsonValue);
+    return {
+      type: 'success',
+      text1: 'success',
+      text2: 'track removed'
+    }
+  } catch (e) {
+    console.log('storeTracks error', e)
+    return {
+      type: 'error',
+      text1: 'error',
+      text2: 'track dont remove'
+    }
+  }
+};
 
 
 
-export {storeTracks, getTracks}
+
+
+export { storeTracks, getTracks, removeTracks}

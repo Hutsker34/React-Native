@@ -106,6 +106,11 @@ function Player(props) {
             props.addTrack(item)
         }
     }
+    function clickRemoveTrack(item) {
+        if(props.deleteTrack){
+            props.deleteTrack(item)
+        }
+    }
     return (
         <View>
         {tracks.length == 0 &&
@@ -115,7 +120,7 @@ function Player(props) {
             <FlatList
                 data={tracks}
                 keyExtractor={(item, index) => index}
-                renderItem={({item , index}) => <Sound clickAddTrack={clickAddTrack} item={item} showAddButton={props.showAddButton}  trackMillis={trackMillis} playNext={playNext}  sound={currentSound} playbackStatus={playbackStatus} isActive={currentSoundIndex == index} setCurrentSoundIndex={changeCurrentSound} currentSoundIndex={currentSoundIndex} name={item.name}  index={index}  />}
+                renderItem={({item , index}) => <Sound clickRemoveTrack={clickRemoveTrack} clickAddTrack={clickAddTrack} item={item} showAddButton={props.showAddButton} showRemoveButton={props.showRemoveButton}  trackMillis={trackMillis} playNext={playNext}  sound={currentSound} playbackStatus={playbackStatus} isActive={currentSoundIndex == index} setCurrentSoundIndex={changeCurrentSound} currentSoundIndex={currentSoundIndex} name={item.name}  index={index}  />}
             />
         }
        
